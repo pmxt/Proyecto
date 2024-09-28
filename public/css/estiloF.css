@@ -1,0 +1,31 @@
+/* Estilo para el encabezado */
+h2 {
+    color: #007bff; /* Color del texto */
+    text-align: center; /* Centrar el texto */
+    margin-bottom: 20px; /* Espaciado inferior */
+    font-size: 2.5rem; /* Tamaño por defecto */
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 576px) {
+    h2 {
+        font-size:  0 rem; /* Tamaño más pequeño en móviles */
+    }
+
+    .form-group input {
+        font-size: 0.9rem; /* Tamaño de fuente más pequeño para los inputs */
+    }
+
+    .btn {
+        font-size: 0.9rem; /* Tamaño de fuente más pequeño para los botones */
+    }
+
+    .d-flex {
+        flex-direction: column; /* Cambiar a columna en móviles */
+    }
+
+    .mr-3 {
+        margin-right: 0; /* Eliminar margen en móviles */
+        margin-bottom: 10px; /* Añadir espaciado inferior */
+    }
+}

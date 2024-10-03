@@ -18,13 +18,17 @@
             </div>
         @endif
 
-        <!-- Barra de progreso -->
-        <div class="progress mb-4">
-            <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0"
-                aria-valuemax="100">
-                Paso 1 de 2
-            </div>
+        @if(isset($currentStep) && isset($totalSteps))
+    @php
+        $progress = ($currentStep / $totalSteps) * 100;
+    @endphp
+    <div class="progress mb-4">
+        <div class="progress-bar" role="progressbar" style="width: {{ $progress }}%;" 
+            aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100">
+            Paso {{ $currentStep }} de {{ $totalSteps }}
         </div>
+    </div>
+@endif
         <form action="{{ route('registro.storeStep1') }}" method="POST">
             @csrf
 

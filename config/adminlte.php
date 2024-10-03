@@ -323,8 +323,15 @@ return [
             'label_color' => 'success',
         ],
         [
+            'text' => 'Control Nutricional',
+            'url' => '/embarazo/actual',
+            'icon' => 'far fa-fw fa-file',
+            'label' => 4,
+            'label_color' => 'success',
+        ],
+        [
             'text' => 'Seguimiento prenatal',
-            'url' => 'admin/pages',
+            'url' => '/embarazo/actual',
             'icon' => 'far fa-fw fa-file',
             'label' => 4,
             'label_color' => 'success',

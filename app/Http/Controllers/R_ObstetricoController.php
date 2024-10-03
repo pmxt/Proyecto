@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -10,7 +11,9 @@ class R_ObstetricoController extends Controller
     public function step1()
     {
         $datos = session('step1', []); // Recupera los datos de la sesión, o un array vacío si no hay datos
-        return view('layouts.nuevo_paciente', compact('datos')); // Pasa los datos a la vista
+        $currentStep = 1; // Estás en el paso 1
+    $totalSteps = 5;  // Suponiendo que tienes 3 pasos en total
+        return view('layouts.nuevo_paciente', compact('datos', 'currentStep', 'totalSteps'));
     }
 
     public function storeStep1(Request $request)
@@ -23,10 +26,10 @@ class R_ObstetricoController extends Controller
             'pueblos' => 'required|string',
             'Escolaridad' => 'nullable|string',
             'Ocupacion' => 'nullable|string',
-            'distancia'=> 'nullable|string',
-            'tiempo'=> 'nullable|string',
-            'comunidad'=> 'nullable|string',
-            'telefono'=> 'nullable|string',
+            'distancia' => 'nullable|string',
+            'tiempo' => 'nullable|string',
+            'comunidad' => 'nullable|string',
+            'telefono' => 'nullable|string',
 
         ], [
             'cui.required' => 'El CUI es obligatorio.',
@@ -72,8 +75,11 @@ class R_ObstetricoController extends Controller
 
     public function step2()
     {
+        
         $datos = session('step2', []); // Recupera los datos de la sesión, o un array vacío si no hay datos
-        return view('layouts.datos_esposo', compact('datos')); // Pasa los datos a la vista
+        $currentStep = 2; // Estás en el paso 1
+    $totalSteps = 5;  // Suponiendo que tienes 3 pasos en total
+        return view('layouts.datos_esposo', compact('datos','currentStep', 'totalSteps')); // Pasa los datos a la vista
     }
 
     public function storeStep2(Request $request)
@@ -120,24 +126,31 @@ class R_ObstetricoController extends Controller
         ]);
 
         // Limpiar la sesión después de guardar todos los datos
-        session()->forget('step1');
+        /*session()->forget('step1');
+        session()->forget('step2');
+        session()->forget('submit'); */
+        
+        // Guardar en la sesión para el siguiente paso
+        session(['step2' => array_merge($validated, ['edad' => $edad])]);
         session()->flash('success', 'Paciente y encargado registrados correctamente.');
+        
 
         // Redirigir a una página de éxito
-        return redirect()->route('registro.paso2');
+        return redirect()->route('antecedentes.show');
     }
 
 
     public function listarpacientes(Request $request)
     {
         $search = $request->input('search'); // Recibe el valor de búsqueda
-        $pacientes = Paciente::when($search, function($query, $search) {
+        $pacientes = Paciente::when($search, function ($query, $search) {
             return $query->where('cui', 'LIKE', "%{$search}%")
-                         ->orWhere('name', 'LIKE', "%{$search}%");
-        })->paginate(10); 
-    
+                ->orWhere('name', 'LIKE', "%{$search}%");
+        })->paginate(10);
+
         // Retornar la vista con la variable $pacientes
         return view('layouts.listado_pacientes', compact('pacientes'));
     }
-    
+
+   
 }

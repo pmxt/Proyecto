@@ -4,11 +4,14 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\UserController;
 use App\http\Controllers\R_ObstetricoController;
+use App\Http\Controllers\AntecedentesObstetricosController;  // Correcto
+use App\Http\Controllers\embarazo;
+use App\Http\Controllers\EmbarazoController;
+use App\Http\Controllers\historialClinico;
 
 Route::get('/', function () {
     return redirect('/login'); 
 });
-
 
 // ---------rutas para funcionalidad de usuario ------------------------
 Auth::routes();
@@ -27,41 +30,62 @@ Route::post('/nuevo/paciente', [R_ObstetricoController::class, 'storeStep1'])->n
 Route::get('/nuevo/datos_esposo', [R_ObstetricoController::class, 'step2'])->name('registro.paso2');
 Route::post('/nuevo/datos_esposo', [R_ObstetricoController::class, 'storeStep2'])->name('registro.storeStep2');
 
+// guarda los antecedentes del paciente ---------------------
 
+Route::get('/paciente/antecedentes', [AntecedentesObstetricosController::class, 'step'])->name('antecedentes.show');
+Route::post('/paciente/antecedentes', [AntecedentesObstetricosController::class, 'submit'])->name('antecedentes.submit');
+
+// guarda el historial del embarazo de la paciente ----------
+
+Route::get('/embarazo', [embarazo::class, 'mostrarFormulario'])->name('embarazo.mostrar');
+Route::post('/embarazo', [embarazo::class, 'guardarFormulario'])->name('embarazo.guardar');
+
+// guarda el historial de la paciente el historial clinico ----------
+
+Route::get('/historial', [historialClinico::class, 'mostrarFormulario'])->name('historial.mostrar');
+Route::post('/historial', [historialClinico::class, 'guardarHistorial'])->name('historial.guardar');
+
+
+//-----------------------------------------------------------------------------------//
 // listar los pacientes ---------------------------
 Route::get('/paciente/lista', [R_ObstetricoController::class, 'listarpacientes'])->name('pacientes.listar');
 
 
-route::get('/paciente/antecedente', function(){
 
-    return view('layouts.antecedentes_obstetricos');
-});
+//------------------------------- embarazo actual peso imc etc ---------------------
+Route::get('/embarazo/actual', [EmbarazoController::class, 'obtener'])->name('pacientes.Obtener');
+Route::post('/embarazo/actual', [EmbarazoController::class, 'guardar'])->name('pacientes.guardar');
 
-route::get('/paciente/historia', function(){
 
-    return view('layouts.historia_clinica');
-});
+//------------------------------- seguimiento prenatal 
+//Route::get('/embarazo/nutricion', [EmbarazoController::class, 'obtener'])->name('nutricion.Obtener');
+//Route::post('/embarazo/nutricion', [EmbarazoController::class, 'guardar'])->name('nutricion.guardar');
 
-route::get('/embarazo/actual',function(){
-    return view('layouts.embarazo');
-});
-route::get('/embarazo/peligro',function(){
+
+// falta por terminar ----------------------------
+Route::get('/embarazo/peligro',function(){
     return view('layouts.signos_sintomas_peligro');
 });
 
 
+Route::get('/embarazo/nutricion',function(){
+    return view('layouts.control');
+});
+
+
+
 // listado de pacientes dashbord
-route::get('/pacientes/listado',function(){
+Route::get('/pacientes/listado',function(){
     return view('layouts.listado_pacientes');
 });
 
 // Para generar una nueva consulta y seguimiento prenatal
-route::get('/pacientes/Consulta',function(){
+Route::get('/pacientes/Consulta',function(){
     return view('layouts.consultas_prenatalesa');
 });
 
 
-route::get('/pacientes/examen',function(){
+Route::get('/pacientes/examen',function(){
     return view('layouts.examen_fisico');
 });
 

@@ -9,13 +9,17 @@
     <div class="container">
         <h2 class="text-center">Ficha de Registro Obstétrico Del Ministerio De Salud Pública y Asistencia Social</h2>
 
-        <!-- Barra de progreso -->
-        <div class="progress mb-4">
-            <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0"
-                aria-valuemax="100">
-                Paso 2 de 2
-            </div>
+        @if(isset($currentStep) && isset($totalSteps))
+    @php
+        $progress = ($currentStep / $totalSteps) * 100;
+    @endphp
+    <div class="progress mb-4">
+        <div class="progress-bar" role="progressbar" style="width: {{ $progress }}%;" 
+            aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100">
+            Paso {{ $currentStep }} de {{ $totalSteps }}
         </div>
+    </div>
+@endif
 
         <form action="{{ route('registro.storeStep2') }}" method="POST">
             @csrf
@@ -36,7 +40,7 @@
                 </button>
             </div>
             <!-- Solo redirige al dar clic en aceptar -->
-            <a href="{{ route('registro.paso1') }}" class="btn btn-primary">Aceptar</a>
+            <a href="{{ route('antecedentes.show') }}" class="btn btn-primary">Aceptar</a>
         @endif
 
             <div class="form-group">
@@ -111,7 +115,7 @@
 
             <a href="{{ route('registro.paso1') }}" class="btn btn-warning">Volver</a>
             <!-- Enlace para volver al paso 1 -->
-            <button type="submit" class="btn btn-success">Finalizar</button>
+            <button type="submit" class="btn btn-success">Siguiente</button>
         </form>
 
         <script>

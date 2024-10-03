@@ -2,6 +2,10 @@
 
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/estilosU.css') }}">
+    <head>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    </head>
     @vite('resources/css/app.css')
 @endsection
 
@@ -29,20 +33,22 @@
                             <td class="min-w-44">{{ $user->name }}</td>
                             <td class="min-w-44">{{ $user->email }}</td>
                             <td>
-                                <!-- Icono de editar -->
+                                <!-- Botón de editar -->
                                 <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm">
-                                    Editar <i class="fa fa-edit"></i>
+                                    <i class="fa fa-edit"></i>
                                 </a>
 
-                                <!-- Icono de eliminar -->
-                                <form action="{{ route('users.destroy', $user->id) }}" method="POST"
-                                    style="display:inline;"
-                                    onsubmit="return confirm('¿Estás seguro de que deseas eliminar al usuario {{ $user->name }}?');">
+                                <!-- Botón de eliminar -->
+                                <button type="button" class="btn btn-danger btn-sm"
+                                    onclick="confirmDelete({{ $user->id }}, '{{ $user->name }}')">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+
+                                <!-- Formulario de eliminación oculto -->
+                                <form id="delete-form-{{ $user->id }}" action="{{ route('users.destroy', $user->id) }}"
+                                    method="POST" style="display: none;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-danger">
-                                        Eliminar <i class="fa fa-trash btn-sm"></i>
-                                    </button>
                                 </form>
                             </td>
                         </tr>
@@ -53,4 +59,23 @@
             {{ $users->links() }} <!-- Paginación -->
         </div>
     </div>
+    <script>
+        function confirmDelete(userId, userName) {
+            Swal.fire({
+                title: '¿Estás seguro?',
+                text: "¡No podrás revertir esto!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sí, eliminar',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Si el usuario confirma la eliminación, enviamos el formulario
+                    document.getElementById('delete-form-' + userId).submit();
+                }
+            });
+        }
+    </script>
 @endsection

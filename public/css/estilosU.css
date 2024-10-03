@@ -7,6 +7,13 @@ h1 {
     margin-top: 20px;
     font-family: 'Arial', sans-serif;
 }
+#imcChart {
+    max-width: 600px; /* Cambia este valor para hacer la gráfica más pequeña */
+    max-height: 400px;
+    width: 100%; /* Hace que el gráfico sea responsive */
+    height: auto; /* Mantiene las proporciones */
+}
+
 
 /* Estilo para la tabla */
 .table {

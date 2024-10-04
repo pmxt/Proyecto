@@ -324,14 +324,14 @@ return [
         ],
         [
             'text' => 'Control Nutricional',
-            'url' => '/embarazo/actual',
+            'url' => '/embarazo/nutricion',
             'icon' => 'far fa-fw fa-file',
             'label' => 4,
             'label_color' => 'success',
         ],
         [
             'text' => 'Seguimiento prenatal',
-            'url' => '/embarazo/actual',
+            'url' => '/embarazo/consulta1',
             'icon' => 'far fa-fw fa-file',
             'label' => 4,
             'label_color' => 'success',

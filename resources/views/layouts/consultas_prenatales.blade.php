@@ -18,6 +18,23 @@
             </ul>
         </div>
     @endif
+      <!-- Barra de progreso -->
+      @if(isset($currentStep) && isset($totalSteps))
+      @php
+          $progress = ($currentStep / $totalSteps) * 100;
+      @endphp
+      <div class="progress mb-4">
+          <div class="progress-bar" role="progressbar" style="width: {{ $progress }}%;" 
+              aria-valuenow="{{ $progress }}" aria-valuemin="0" aria-valuemax="100">
+              Paso {{ $currentStep }} de {{ $totalSteps }}
+          </div>
+      </div>
+  @endif
+    @if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
 
     <form action="{{ route('consulta.guardar') }}" method="POST">
         @csrf

@@ -11,11 +11,17 @@ class ModeloEmbarazo_Actual extends Model
     protected $table = 'nuevoE'; // Cambia el nombre de la tabla según corresponda
     protected $fillable = [
         'paciente_cui',
-        'peso_lb',
+        'numero_control',
+        'fecha_control',
+        'peso_libras',
         'peso_kg',
         'talla',
-        'imc',
-        'cmb',
+        'semanas_gestacion',
+        'ganancia_peso',
+        'responsable',
+         'imc',
+         'diagnostico' 
+
     ];
     public function paciente()
     {

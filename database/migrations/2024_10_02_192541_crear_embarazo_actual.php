@@ -16,11 +16,16 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('paciente_cui');
             $table->foreign('paciente_cui')->references('cui')->on('pacientes')->onDelete('cascade');
-            $table->float('peso_lb');
+            $table->integer('numero_control');
+            $table->date('fecha_control');
+            $table->float('peso_libras');
             $table->float('peso_kg');
             $table->float('talla');
+            $table->integer('semanas_gestacion');
+            $table->float('ganancia_peso');
+            $table->string('responsable');
             $table->float('imc');
-            $table->float('cmb');
+            $table->string('diagnostico');
             $table->timestamps();
         });
     }

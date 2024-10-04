@@ -5,8 +5,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\UserController;
 use App\http\Controllers\R_ObstetricoController;
 use App\Http\Controllers\AntecedentesObstetricosController;  // Correcto
+use App\Http\Controllers\ConsultaPrenatal;
 use App\Http\Controllers\embarazo;
 use App\Http\Controllers\EmbarazoController;
+use App\Http\Controllers\examen1Controller;
 use App\Http\Controllers\historialClinico;
 
 Route::get('/', function () {
@@ -53,13 +55,19 @@ Route::get('/paciente/lista', [R_ObstetricoController::class, 'listarpacientes']
 
 
 //------------------------------- embarazo actual peso imc etc ---------------------
-Route::get('/embarazo/actual', [EmbarazoController::class, 'obtener'])->name('pacientes.Obtener');
-Route::post('/embarazo/actual', [EmbarazoController::class, 'guardar'])->name('pacientes.guardar');
+//Route::get('/embarazo/actual', [EmbarazoController::class, 'obtener'])->name('pacientes.Obtener');
+//Route::post('/embarazo/actual', [EmbarazoController::class, 'guardar'])->name('pacientes.guardar');
 
 
-//------------------------------- seguimiento prenatal 
-//Route::get('/embarazo/nutricion', [EmbarazoController::class, 'obtener'])->name('nutricion.Obtener');
-//Route::post('/embarazo/nutricion', [EmbarazoController::class, 'guardar'])->name('nutricion.guardar');
+//------------------------------- seguimiento nutricional-----------
+Route::get('/embarazo/nutricion', [EmbarazoController::class, 'obtener'])->name('nutricion.Obtener');
+Route::post('/embarazo/nutricion', [EmbarazoController::class, 'guardar'])->name('nutricion.guardar');
+//------------------------------- seguimiento prenatal ----------
+Route::get('/embarazo/consulta1', [ConsultaPrenatal::class, 'obtener'])->name('consulta.Obtener');
+Route::post('/embarazo/consulta1', [ConsultaPrenatal::class, 'guardar'])->name('consulta.guardar');
+//------------------------------- Examen fisico ----------
+Route::get('/embarazo/examen1', [examen1Controller::class, 'obtener'])->name('examen.Obtener');
+Route::post('/embarazo/examen1', [examen1Controller::class, 'guardar'])->name('examen.guardar');
 
 
 // falta por terminar ----------------------------
@@ -68,9 +76,9 @@ Route::get('/embarazo/peligro',function(){
 });
 
 
-Route::get('/embarazo/nutricion',function(){
+/*Route::get('/embarazo/nutricion',function(){
     return view('layouts.control');
-});
+});*/
 
 
 

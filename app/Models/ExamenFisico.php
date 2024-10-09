@@ -38,4 +38,8 @@ class ExamenFisico extends Model
         'problemas_detectados',
 
     ];
+    public function consultaPrenatal()
+    {
+        return $this->belongsTo(consulta1::class, 'consulta_prenatal_id');
+    }
 }

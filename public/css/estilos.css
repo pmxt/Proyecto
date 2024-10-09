@@ -102,5 +102,25 @@ body {
     }
 }
 
+.custom-btn {
+    background-color: #00a2ff; /* Cambia el color de fondo */
+    color: white; /* Color del texto */
+    border: none; /* Sin bordes */
+    padding: 12px 24px; /* Ajusta el tamaño del botón */
+    border-radius: 50px; /* Redondea las esquinas */
+    font-size: 16px; /* Tamaño del texto */
+    font-weight: bold; /* Negrita para el texto */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para darle profundidad */
+    transition: all 0.3s ease-in-out; /* Transición suave para efectos */
+    width: 100%; /* Que el botón ocupe todo el ancho */
+}
+
+.custom-btn:hover {
+    background-color: #007acc; /* Cambia el color al pasar el mouse */
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15); /* Aumenta la sombra */
+    transform: translateY(-2px); /* Efecto de elevar el botón */
+}
+
+
 
 

@@ -1,65 +1,82 @@
-@extends('layouts.app')
+<!doctype html>
+<html lang="en">
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Reset Password') }}</div>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Restablecer Contraseña</title>
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('password.update') }}">
-                        @csrf
+    <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
 
-                        <input type="hidden" name="token" value="{{ $token }}">
+    <!-- Bootstrap CSS v5.3.2 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
 
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+<body>
+    <div class="wrapper">
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ $email ?? old('email') }}" required autocomplete="email" autofocus>
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="new-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password-confirm" class="col-md-4 col-form-label text-md-end">{{ __('Confirm Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required autocomplete="new-password">
-                            </div>
-                        </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Reset Password') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
+        <div class="logo">
+            <img src="{{ asset('imagenes/302464652_537376068387806_7427466127821357187_n.png') }}" alt="">
         </div>
+        <div class="text-center mt-4 name">
+            Restablecer Contraseña
+        </div>
+        <!-- Mostrar errores de validación -->
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+        <!-- Mensaje de éxito al enviar el correo de restablecimiento -->
+        @if (session('status'))
+            <div class="alert alert-success text-center mt-3">
+                {{ session('status') }}
+            </div>
+        @endif
+
+        <!-- Formulario de Restablecimiento de Contraseña -->
+        <form action="{{ route('password.update') }}" method="POST">
+            @csrf
+            <input type="hidden" name="token" value="{{ $token }}">
+
+            <p>Ingresa tu correo</p>
+            <div class="form-field d-flex align-items-center">
+                <span class="far fa-user"></span>
+                <input type="email" name="email" id="email" placeholder="Correo" value="{{ old('email') }}"
+                    required>
+            </div>
+
+            <p>Ingresa la nueva contraseña</p>
+            <div class="form-field d-flex align-items-center">
+                <span class="fas fa-key"></span>
+                <input type="password" name="password" id="password" placeholder="Nueva Contraseña" required>
+            </div>
+
+            <p>Confirma la nueva contraseña</p>
+            <div class="form-field d-flex align-items-center">
+                <span class="fas fa-key"></span>
+                <input type="password" name="password_confirmation" id="password_confirmation"
+                    placeholder="Confirmar Contraseña" required>
+            </div>
+
+            <button class="btn mt-3">Restablecer Contraseña</button>
+        </form>
+
     </div>
-</div>
-@endsection
+
+    <!-- Bootstrap JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous">
+    </script>
+</body>
+
+</html>

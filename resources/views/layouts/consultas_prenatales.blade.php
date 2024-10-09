@@ -97,9 +97,6 @@
         <button type="submit" class="btn btn-success">Guardar y continuar</button>
     </form>
 
-    <div class="mt-4">
-        <a href="" class="btn btn-secondary">Realizar Examen Físico</a>
-        <a href="" class="btn btn-warning">Evaluar Signos y Síntomas de Peligro</a>
-    </div>
+    
 </div>
 @endsection

@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Support\Facades\Auth;
 return [
 
     /*
@@ -323,6 +323,13 @@ return [
             'label_color' => 'success',
         ],
         [
+            'text' => 'Calendario de citas ',
+            'url' => '/calendario',
+            'icon' => 'far fa-fw fa-file',
+            'label' => 4,
+            'label_color' => 'success',
+        ],
+        [
             'text' => 'Control Nutricional',
             'url' => '/embarazo/nutricion',
             'icon' => 'far fa-fw fa-file',
@@ -350,6 +357,13 @@ return [
             'label' => 4,
             'label_color' => 'success',
         ],
+        [
+            'text' => 'Suplementos',
+            'url' => '/medicamentos',
+            'icon' => 'far fa-fw fa-file',
+            'label' => 4,
+            'label_color' => 'success',
+        ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',
@@ -357,17 +371,18 @@ return [
             'icon' => 'fas fa-fw fa-user',
         ],
         [
-            'text' => 'change_password',
-            'url' => 'admin/settings',
+            'text' => 'Actualizar contraseña',
+            'url' => '/Usuarios', // Genera la URL usando el id del usuario autenticado
             'icon' => 'fas fa-fw fa-lock',
+
         ],
         [
             'text' => 'Usuarios',
             'url' => '/Usuarios',
             'icon' => 'fas fa-fw fa-lock',
         ]
-        
-      /*  [
+
+        /*  [
             'text' => 'multilevel',
             'icon' => 'fas fa-fw fa-share',
             'submenu' => [
@@ -405,7 +420,7 @@ return [
                 ],
             ],
         ]*/
-       /* ['header' => 'labels'],
+        /* ['header' => 'labels'],
         [
             'text' => 'important',
             'icon_color' => 'red',

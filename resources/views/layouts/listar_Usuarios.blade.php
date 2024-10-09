@@ -37,6 +37,9 @@
                                 <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm">
                                     <i class="fa fa-edit"></i>
                                 </a>
+                                <a href="{{ route('users.password', $user->id) }}" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-edit"></i>
+                                </a>
 
                                 <!-- Botón de eliminar -->
                                 <button type="button" class="btn btn-danger btn-sm"
@@ -60,9 +63,9 @@
         </div>
     </div>
     <script>
-        function confirmDelete(userId, userName) {
+        function confirmDelete(id, name) {
             Swal.fire({
-                title: '¿Estás seguro?',
+                title: '¿Estás seguro de que deseas eliminar el medicamento "' + name + '"?',
                 text: "¡No podrás revertir esto!",
                 icon: 'warning',
                 showCancelButton: true,
@@ -73,7 +76,7 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Si el usuario confirma la eliminación, enviamos el formulario
-                    document.getElementById('delete-form-' + userId).submit();
+                    document.getElementById('delete-form-' + id).submit();
                 }
             });
         }

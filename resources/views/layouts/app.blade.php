@@ -17,6 +17,7 @@
         
         @livewireStyles
         @vite('resources/css/app.css')
+        
 
         <h1 class="text-muted">
             @yield('content_header_title')
@@ -55,6 +56,7 @@
 @section('content')
     @yield('content_body')
     @livewireScripts
+    @yield('content')
 @stop
 
 {{-- Create a common footer --}}

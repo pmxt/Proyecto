@@ -42,7 +42,7 @@ class ConsultaPrenatal extends Controller
 
 
         ]);
-        $consultaId= consulta1::create([
+        $consulta= consulta1::create([
             'paciente_cui' => $validated['paciente_cui'],
             'fecha_consulta' => $validated['fecha_consulta'],
             'tipo_servicio' => $validated['tipo_servicio'],
@@ -54,8 +54,8 @@ class ConsultaPrenatal extends Controller
 
         // Obtener el ID de la consulta recién creada
 
-        session(['obtener1' => ['id' => $consultaId->id]]);
+        session(['obtener1' => ['id' => $consulta->id]]);
         
-        return redirect()->route('examen.Obtener')->with('success', 'Datos de la consulta guardados correctamente');
+        return redirect()->route('examen.Obtener',['consultaId' => $consulta->id])->with('success', 'Datos de la consulta guardados correctamente');
     }
 }

@@ -19,4 +19,10 @@ class Paciente extends Model
     {
         return $this->hasMany(Encargado::class, 'paciente_cui', 'cui');
     }
+
+     // Relación con el modelo Historial
+     public function historial()
+     {
+         return $this->hasOne(Historial::class, 'paciente_cui', 'cui');
+     }
 }

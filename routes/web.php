@@ -16,6 +16,9 @@ use App\Http\Controllers\EmbarazoController;
 use App\Http\Controllers\examen1Controller;
 use App\Http\Controllers\GraficaController;
 use App\Http\Controllers\historialClinico;
+use App\Http\Controllers\PDFController;
+use Barryvdh\DomPDF\Facade\Pdf; 
+use App\Http\Controllers\ReporteController;
 
 Route::get('/', function () {
     return redirect('/login'); 
@@ -105,12 +108,18 @@ Route::put('/medicamentos/{id}', [Controllermedicamentos::class, 'update'])->nam
 Route::delete('/medicamentos/{id}', [Controllermedicamentos::class, 'destroy'])->name('medicamentos.destroy');
 
 
+// en proceso de desarrollo para generar los pdfs 
+
+Route::get('/reporte-paciente', [PDFController::class, 'generarPDF']);
 
 
 
 
 //-------------- falta por terminar -----------------------
 // listado de pacientes dashbord
+
+
+
 
 // en proceso de creacion de graficos para el dashbord principal 
 Route::get('/grafica/cobertura', [GraficaController::class, 'mostrarCobertura'])->name('grafica.cobertura');

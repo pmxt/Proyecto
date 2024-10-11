@@ -18,7 +18,6 @@
                 </ul>
             </div>
         @endif
-        <!-- Barra de progreso -->
         @if(isset($currentStep) && isset($totalSteps))
     @php
         $progress = ($currentStep / $totalSteps) * 100;

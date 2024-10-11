@@ -8,8 +8,6 @@
 @section('content')
 <div class="container">
     <h2 class="text-center">Asignar Suplementos a la Paciente</h2>
-
-    <!-- Mostrar errores de validación -->
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -20,14 +18,11 @@
         </div>
     @endif
 
-    <!-- Mostrar mensaje de éxito -->
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
-
-    <!-- Formulario para asignar suplementos -->
     <form action="{{ route('medicamentos.asignar.guardar', ['examenFisicoId' => $examenFisicoId]) }}" method="POST">
         @csrf
         <table class="table table-bordered">

@@ -14,10 +14,10 @@
 @section('content_header')
     @hasSection('content_header_title')
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-        
+
         @livewireStyles
         @vite('resources/css/app.css')
-        
+
 
         <h1 class="text-muted">
             @yield('content_header_title')
@@ -54,6 +54,7 @@
 {{-- Rename section content to content_body --}}
 
 @section('content')
+   
     @yield('content_body')
     @livewireScripts
     @yield('content')
@@ -82,10 +83,8 @@
         });
     </script>
     @push('js')
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    
-@endpush
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @endpush
 @endpush
 
 {{-- Add common CSS customizations --}}

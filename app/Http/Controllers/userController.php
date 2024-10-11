@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -72,6 +72,31 @@ class UserController extends Controller
         // Redirigir con un mensaje de éxito
         return redirect()->route('listaUsuarios')->with('success', 'La contraseña ha sido actualizada con éxito.');
     }
+
+    public function asignarRol(Request $request, $id)
+{
+    // Encuentra al usuario por su ID
+    $user = User::findOrFail($id);
+    
+    // Asigna el rol desde el request
+    $user->role = $request->input('role');
+    
+    // Guarda los cambios
+    $user->save();
+
+    // Redirige de vuelta con un mensaje de éxito
+    return back()->with('success', 'Rol asignado correctamente');
+}
+
+public function perfil()
+{
+    // Obtener el usuario autenticado
+    $user = Auth::user();
+
+    // Pasar el usuario a la vista de perfil
+    return view('layouts.perfil', compact('user'));
+}
+
 
     }
 

@@ -50,9 +50,8 @@ class CalendarioController extends Controller
             $user = Auth::user();
             
             // Enviar la notificación al usuario autenticado
-            $user->notify(new CitasNotification($listaCitas)); 
+            $user->notify(new CitasNotification($listaCitas));
         }
-
         // Devolver las citas en formato JSON
         return response()->json($citasFormatted);
     }

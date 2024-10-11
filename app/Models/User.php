@@ -56,5 +56,9 @@ class User extends Authenticatable
         // Utiliza la notificación personalizada CustomResetPassword
         $this->notify(new CustomResetPassword($token));
     }
+    public function hasRole($role)
+    {
+        return $this->role === $role;
+    }
 
 }

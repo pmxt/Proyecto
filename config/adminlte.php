@@ -367,11 +367,11 @@ return [
         ['header' => 'account_settings'],
         [
             'text' => 'profile',
-            'url' => 'admin/settings',
+            'url' => '/perfil',
             'icon' => 'fas fa-fw fa-user',
         ],
         [
-            'text' => 'Actualizar contraseña',
+            'text' => 'Usuarios',
             'url' => '/Usuarios', // Genera la URL usando el id del usuario autenticado
             'icon' => 'fas fa-fw fa-lock',
 

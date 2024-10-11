@@ -7,6 +7,13 @@ h1 {
     margin-top: 20px;
     font-family: 'Arial', sans-serif;
 }
+
+h2 {
+    color: #000000;
+    text-align: center;
+    margin-top: 20px;
+    font-family: 'Arial', sans-serif,'Roboto';
+}
 #imcChart {
     max-width: 600px; /* Cambia este valor para hacer la gráfica más pequeña */
     max-height: 400px;
@@ -66,7 +73,7 @@ body {
 }
 
 .container {
-    background-color: white;
+    background-color: rgb(252, 251, 251);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

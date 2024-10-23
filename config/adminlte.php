@@ -377,8 +377,8 @@ return [
 
         ],
         [
-            'text' => 'Usuarios',
-            'url' => '/Usuarios',
+            'text' => 'crear una cuenta ',
+            'url' => 'admin/register',
             'icon' => 'fas fa-fw fa-lock',
         ]
 

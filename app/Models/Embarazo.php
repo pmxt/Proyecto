@@ -11,23 +11,32 @@ class Embarazo extends Model
     protected $table = 'embarazo';
     protected $fillable = [
         'paciente_cui',
-        'embarazo_multiple',
-        'fecha_ultima_regla',
-        'fecha_probable_parto',
-        'menos_20',
-        'rh_negativo',
-        'mas_35',
-        'hemorragia',
-        'vih_sifilis',
-        'presion_arterial',
-        'anemia',
-        'desnutricion',
-        'dolor_abdominal',
-        'sintomatologia_uterina',
-        'ictericia',
+      'fecha_ultima_regla',
+      'fecha_probable_parto', 
+
     ];
+
+
     public function paciente()
     {
         return $this->belongsTo(Paciente::class, 'paciente_cui', 'cui');
     }
+    public function historial()
+    {
+        return $this->hasOne(Historial::class);
+    }
+    public function antecedenteObstetrico()
+    {
+        return $this->hasOne(AntecedenteObstetrico::class); // 1 a 1 
+    }
+    public function consultasPrenatales()
+{
+    return $this->hasMany(Consulta1::class, 'embarazo_id', 'id');
+}
+
+    public function historialEmbarazoActual()
+    {
+        return $this->hasOne(HistorialEmbarazoActual::class);
+    }
+    
 }

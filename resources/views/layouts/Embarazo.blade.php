@@ -21,6 +21,15 @@
                 </div>
             </div>
         @endif
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
         @if (session('success'))
             <div class="alert alert-success">
@@ -30,21 +39,6 @@
 
         <form action="{{ route('embarazo.guardar') }}" method="POST">
             @csrf
-
-            <div class="form-row">
-                <div class="form-group col-md-6">
-                    <label>Fecha de la última regla</label>
-                    <input type="date" id="fecha_ultima_regla" name="fecha_ultima_regla" class="form-control"
-                        value="{{ old('fecha_ultima_regla', $datos['fecha_ultima_regla'] ?? '') }}" required>
-                </div>
-                <div class="form-group col-md-6">
-                    <label>Fecha probable de parto</label>
-                    <input type="date" id="fecha_probable_parto" name="fecha_probable_parto" class="form-control"
-                        value="{{ old('fecha_probable_parto', $datos['fecha_probable_parto'] ?? '') }}" readonly>
-                </div>
-            </div>
-
-            <!-- Sección Embarazo Actual -->
             <h4>Embarazo Actual</h4>
             <table class="table table-bordered">
                 <thead>
@@ -59,117 +53,80 @@
                     <tr>
                         <td>8</td>
                         <td>Diagnóstico o sospecha de embarazo múltiple</td>
-                        <td><input type="radio" name="embarazo_multiple" value="Sí"
-                                {{ old('embarazo_multiple') == 'Sí' ? 'checked' : '' }} required></td>
-                        <td><input type="radio" name="embarazo_multiple" value="No"
-                                {{ old('embarazo_multiple') == 'No' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="embarazo_multiple" value="si" {{ old('embarazo_multiple') == 'si' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="embarazo_multiple" value="no" {{ old('embarazo_multiple') == 'no' ? 'checked' : '' }} required></td>
                     </tr>
                     <tr>
                         <td>9</td>
                         <td>Menos de 20 años</td>
-                        <td><input type="radio" name="menos_20" value="Sí"
-                                {{ old('menos_20') == 'Sí' ? 'checked' : '' }} required></td>
-                        <td><input type="radio" name="menos_20" value="No"
-                                {{ old('menos_20') == 'No' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="menos_20" value="si" {{ old('menos_20') == 'si' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="menos_20" value="no" {{ old('menos_20') == 'no' ? 'checked' : '' }} required></td>
                     </tr>
                     <tr>
                         <td>10</td>
                         <td>Paciente Rh (-)</td>
-                        <td><input type="radio" name="rh_negativo" value="Sí"
-                                {{ old('rh_negativo') == 'Sí' ? 'checked' : '' }} required></td>
-                        <td><input type="radio" name="rh_negativo" value="No"
-                                {{ old('rh_negativo') == 'No' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="rh_negativo" value="si" {{ old('rh_negativo') == 'si' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="rh_negativo" value="no" {{ old('rh_negativo') == 'no' ? 'checked' : '' }} required></td>
                     </tr>
                     <tr>
                         <td>11</td>
                         <td>Más de 35 años</td>
-                        <td><input type="radio" name="mas_35" value="Sí"
-                                {{ old('mas_35') == 'Sí' ? 'checked' : '' }} required></td>
-                        <td><input type="radio" name="mas_35" value="No"
-                                {{ old('mas_35') == 'No' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="mas_35" value="si" {{ old('mas_35') == 'si' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="mas_35" value="no" {{ old('mas_35') == 'no' ? 'checked' : '' }} required></td>
                     </tr>
                     <tr>
                         <td>12</td>
                         <td>Hemorragia vaginal sin importar cantidad</td>
-                        <td><input type="radio" name="hemorragia" value="Sí"
-                                {{ old('hemorragia') == 'Sí' ? 'checked' : '' }} required></td>
-                        <td><input type="radio" name="hemorragia" value="No"
-                                {{ old('hemorragia') == 'No' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="hemorragia" value="si" {{ old('hemorragia') == 'si' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="hemorragia" value="no" {{ old('hemorragia') == 'no' ? 'checked' : '' }} required></td>
                     </tr>
                     <tr>
                         <td>13</td>
                         <td>VIH positivo o sífilis positivo</td>
-                        <td><input type="radio" name="vih_sifilis" value="Sí"
-                                {{ old('vih_sifilis') == 'Sí' ? 'checked' : '' }} required></td>
-                        <td><input type="radio" name="vih_sifilis" value="No"
-                                {{ old('vih_sifilis') == 'No' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="vih_sifilis" value="si" {{ old('vih_sifilis') == 'si' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="vih_sifilis" value="no" {{ old('vih_sifilis') == 'no' ? 'checked' : '' }} required></td>
                     </tr>
                     <tr>
                         <td>14</td>
                         <td>Presión arterial diastólica de 90 mm hg o más durante el registro de datos</td>
-                        <td><input type="radio" name="presion_arterial" value="Sí"
-                                {{ old('presion_arterial') == 'Sí' ? 'checked' : '' }} required></td>
-                        <td><input type="radio" name="presion_arterial" value="No"
-                                {{ old('presion_arterial') == 'No' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="presion_arterial" value="si" {{ old('presion_arterial') == 'si' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="presion_arterial" value="no" {{ old('presion_arterial') == 'no' ? 'checked' : '' }} required></td>
                     </tr>
                     <tr>
                         <td>15</td>
                         <td>Anemia clínica o de laboratorio</td>
-                        <td><input type="radio" name="anemia" value="Sí"
-                                {{ old('anemia') == 'Sí' ? 'checked' : '' }} required></td>
-                        <td><input type="radio" name="anemia" value="No"
-                                {{ old('anemia') == 'No' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="anemia" value="si" {{ old('anemia') == 'si' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="anemia" value="no" {{ old('anemia') == 'no' ? 'checked' : '' }} required></td>
                     </tr>
                     <tr>
                         <td>16</td>
                         <td>Desnutrición u obesidad</td>
-                        <td><input type="radio" name="desnutricion" value="Sí"
-                                {{ old('desnutricion') == 'Sí' ? 'checked' : '' }} required></td>
-                        <td><input type="radio" name="desnutricion" value="No"
-                                {{ old('desnutricion') == 'No' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="desnutricion" value="si" {{ old('desnutricion') == 'si' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="desnutricion" value="no" {{ old('desnutricion') == 'no' ? 'checked' : '' }} required></td>
                     </tr>
                     <tr>
                         <td>17</td>
                         <td>Dolor Abdominal</td>
-                        <td><input type="radio" name="dolor_abdominal" value="Sí"
-                                {{ old('dolor_abdominal') == 'Sí' ? 'checked' : '' }} required></td>
-                        <td><input type="radio" name="dolor_abdominal" value="No"
-                                {{ old('dolor_abdominal') == 'No' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="dolor_abdominal" value="si" {{ old('dolor_abdominal') == 'si' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="dolor_abdominal" value="no" {{ old('dolor_abdominal') == 'no' ? 'checked' : '' }} required></td>
                     </tr>
                     <tr>
                         <td>18</td>
                         <td>Sintomatología Uterina</td>
-                        <td><input type="radio" name="sintomatologia_uterina" value="Sí"
-                                {{ old('sintomatologia_uterina') == 'Sí' ? 'checked' : '' }} required></td>
-                        <td><input type="radio" name="sintomatologia_uterina" value="No"
-                                {{ old('sintomatologia_uterina') == 'No' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="sintomatologia_uterina" value="si" {{ old('sintomatologia_uterina') == 'si' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="sintomatologia_uterina" value="no" {{ old('sintomatologia_uterina') == 'no' ? 'checked' : '' }} required></td>
                     </tr>
                     <tr>
                         <td>19</td>
                         <td>Ictericia</td>
-                        <td><input type="radio" name="ictericia" value="Sí"
-                                {{ old('ictericia') == 'Sí' ? 'checked' : '' }} required></td>
-                        <td><input type="radio" name="ictericia" value="No"
-                                {{ old('ictericia') == 'No' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="ictericia" value="si" {{ old('ictericia') == 'si' ? 'checked' : '' }} required></td>
+                        <td><input type="radio" name="ictericia" value="no" {{ old('ictericia') == 'no' ? 'checked' : '' }} required></td>
                     </tr>
                 </tbody>
             </table>
 
             <button type="submit" class="btn btn-success">Siguiente</button>
         </form>
-        <script>
-            document.getElementById('fecha_ultima_regla').addEventListener('change', function() {
-                const fechaUltimaRegla = new Date(this.value);
-                // Sumar 280 días (40 semanas) a la fecha de la última regla
-                const fechaProbableParto = new Date(fechaUltimaRegla);
-                fechaProbableParto.setDate(fechaProbableParto.getDate() + 281);
 
-                // Formatear la fecha probable de parto al formato YYYY-MM-DD
-                const year = fechaProbableParto.getFullYear();
-                const month = String(fechaProbableParto.getMonth() + 1).padStart(2, '0'); // Mes comienza en 0
-                const day = String(fechaProbableParto.getDate()).padStart(2, '0');
-                document.getElementById('fecha_probable_parto').value = `${year}-${month}-${day}`;
-            });
-        </script>
     </div>
 @endsection

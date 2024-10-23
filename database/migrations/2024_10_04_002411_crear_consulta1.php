@@ -10,18 +10,20 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {  Schema::create('consultas_prenatales', function (Blueprint $table) {
-        $table->id();
-        $table->bigInteger('paciente_cui');
-        $table->foreign('paciente_cui')->references('cui')->on('pacientes')->onDelete('cascade');
-        $table->date('fecha_consulta');
-        $table->string('tipo_servicio');
-        $table->string('area_salud');
-        $table->string('nombre_servicio');
-        $table->string('motivo_consulta');
-        $table->string('tipo_consulta');
-        $table->timestamps();
-    });
+    {
+        Schema::create('consultas_prenatales', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('embarazo_id');
+            $table->foreign('embarazo_id')->references('id')->on('embarazo')->onDelete('cascade');  // Relación con la tabla 'embarazo'
+
+            $table->date('fecha_consulta');
+            $table->string('tipo_servicio');
+            $table->string('area_salud');
+            $table->string('nombre_servicio');
+            $table->string('motivo_consulta');
+            $table->string('tipo_consulta');
+            $table->timestamps();
+        });
     }
 
     /**

@@ -18,76 +18,126 @@
                 </ul>
             </div>
         @endif
+        @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
 
-        <form action="{{ route('nutricion.guardar') }}" method="POST">
+        <!-- Formulario para seleccionar el paciente -->
+        <form action="{{ route('nutricion.Obtener') }}" method="GET">
             @csrf
             <div class="form-group">
                 <label for="paciente">Seleccionar Paciente</label>
-                <select name="paciente_cui" id="paciente" class="form-control" required>
-                    <option value="">-- Selecciona una paciente --</option>
+                <select name="paciente_cui" id="paciente" class="form-control" required onchange="this.form.submit()">
+                    <option value="">-- Selecciona un paciente --</option>
                     @foreach ($pacientes as $paciente)
-                        <option value="{{ $paciente->cui }}">{{ $paciente->name }} - {{ $paciente->cui }}</option>
+                        <option value="{{ $paciente->cui }}"
+                            {{ request('paciente_cui') == $paciente->cui ? 'selected' : '' }}>
+                            {{ $paciente->name }} - {{ $paciente->cui }}
+                        </option>
                     @endforeach
                 </select>
             </div>
+        </form>
 
-            <div class="form-group">
-                <label for="numero_control">Número de Control</label>
-                <input type="number" id="numero_control" name="numero_control" class="form-control" min="1"
-                    max="10" required>
-            </div>
+        <!-- Mostrar los embarazos si se seleccionó un paciente -->
+        @if (!empty($embarazos))
+            <form action="{{ route('nutricion.Obtener') }}" method="GET">
+                @csrf
+                <input type="hidden" name="paciente_cui" value="{{ request('paciente_cui') }}">
+                <div class="form-group">
+                    <label for="embarazo_id">Seleccionar Embarazo:</label>
+                    <select id="embarazo_id" name="embarazo_id" class="form-control" required onchange="this.form.submit()">
+                        <option value="">-- Seleccionar Embarazo --</option>
+                        @foreach ($embarazos as $embarazo)
+                            <option value="{{ $embarazo->id }}"
+                                {{ request('embarazo_id') == $embarazo->id ? 'selected' : '' }}>
+                                Embarazo {{ $embarazo->id }} - FPP: {{ $embarazo->fecha_probable_parto }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+            </form>
+        @endif
 
-            <div class="form-group">
-                <label for="fecha_control">Fecha de Control</label>
-                <input type="date" id="fecha_control" name="fecha_control" class="form-control" required>
-            </div>
+        <!-- Mostrar controles nutricionales si se seleccionó un embarazo -->
+        @if (!empty($controlesNutricionales))
+            <h3>Controles Nutricionales</h3>
+            <ul>
+                @foreach ($controlesNutricionales as $control)
+                    <li>Control {{ $control->numero_control }} - Fecha: {{ $control->fecha_control }}</li>
+                @endforeach
+            </ul>
+        @endif
 
-            <div class="form-group">
-                <label for="peso_libras">Peso (lb)</label>
-                <input type="number" step="0.1" id="peso_libras" name="peso_libras" class="form-control"
-                    placeholder="Ingresa el peso en libras" required>
-            </div>
+        @if (request('embarazo_id'))
+            <form action="{{ route('nutricion.guardar') }}" method="POST">
+                @csrf
+                <!-- Asegúrate de que el campo embarazo_id esté incluido -->
+                <input type="hidden" name="embarazo_id" value="{{ request('embarazo_id') }}">
 
-            <div class="form-group">
-                <label for="peso_kg">Peso (kg)</label>
-                <input type="text" id="peso_kg" name="peso_kg" class="form-control" readonly>
-            </div>
 
-            <div class="form-group">
-                <label for="talla">Talla (cm)</label>
-                <input type="number" step="0.1" id="talla" name="talla" class="form-control"
-                    placeholder="Ingresa la talla en cm" required>
-            </div>
 
-            <div class="form-group">
-                <label for="semanas_gestacion">Semanas de gestación</label>
-                <input type="number" id="semanas_gestacion" name="semanas_gestacion" class="form-control"
-                    placeholder="Ingresa las semanas de gestación" required>
-            </div>
 
-            <div class="mt-3">
-                <p><strong>IMC Calculado:</strong> <span id="imc_result">--</span></p>
-                <p><strong>Diagnóstico:</strong> <span id="diagnostico_result">--</span></p>
-            </div>
+                <div class="form-group">
+                    <label for="numero_control">Número de Control</label>
+                    <input type="number" id="numero_control" name="numero_control" class="form-control" min="1"
+                        max="10" required>
+                </div>
 
-            <div class="form-group">
-                <label for="ganancia_peso">Ganancia de peso (kg)</label>
-                <input type="number" step="0.1" id="ganancia_peso" name="ganancia_peso" class="form-control"
-                    placeholder="Ingresa la ganancia de peso" required>
-            </div>
+                <div class="form-group">
+                    <label for="fecha_control">Fecha de Control</label>
+                    <input type="date" id="fecha_control" name="fecha_control" class="form-control" required>
+                </div>
 
-            <div class="form-group">
-                <label for="responsable">Nombre del Responsable</label>
-                <input type="text" id="responsable" name="responsable" class="form-control"
-                    placeholder="Ingresa el nombre de quien brindó la consulta" required>
-            </div>
+                <div class="form-group">
+                    <label for="peso_libras">Peso (lb)</label>
+                    <input type="number" step="0.1" id="peso_libras" name="peso_libras" class="form-control"
+                        placeholder="Ingresa el peso en libras" required>
+                </div>
 
-           
-            <!-- Campos ocultos para enviar IMC y Diagnóstico -->
-            <input type="hidden" name="imc" id="imc_hidden">
-            <input type="hidden" name="diagnostico" id="diagnostico_hidden">
+                <div class="form-group">
+                    <label for="peso_kg">Peso (kg)</label>
+                    <input type="text" id="peso_kg" name="peso_kg" class="form-control" readonly>
+                </div>
 
-            <button type="submit" class="btn btn-primary">Guardar Diagnóstico</button>
+                <div class="form-group">
+                    <label for="talla">Talla (cm)</label>
+                    <input type="number" step="0.1" id="talla" name="talla" class="form-control"
+                        placeholder="Ingresa la talla en cm" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="semanas_gestacion">Semanas de gestación</label>
+                    <input type="number" id="semanas_gestacion" name="semanas_gestacion" class="form-control"
+                        placeholder="Ingresa las semanas de gestación" required>
+                </div>
+
+                <div class="mt-3">
+                    <p><strong>IMC Calculado:</strong> <span id="imc_result">--</span></p>
+                    <p><strong>Diagnóstico:</strong> <span id="diagnostico_result">--</span></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="ganancia_peso">Ganancia de peso (kg)</label>
+                    <input type="number" step="0.1" id="ganancia_peso" name="ganancia_peso" class="form-control"
+                        placeholder="Ingresa la ganancia de peso" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="responsable">Nombre del Responsable</label>
+                    <input type="text" id="responsable" name="responsable" class="form-control"
+                        placeholder="Ingresa el nombre de quien brindó la consulta" required>
+                </div>
+
+
+                <!-- Campos ocultos para enviar IMC y Diagnóstico -->
+                <input type="hidden" name="imc" id="imc_hidden">
+                <input type="hidden" name="diagnostico" id="diagnostico_hidden">
+
+                <button type="submit" class="btn btn-primary">Guardar Diagnóstico</button>
+        @endif
         </form>
 
         {{-- Añadimos el canvas para la gráfica de Chart.js --}}
@@ -253,7 +303,7 @@
                     40) {
                     const imc = pesoKg / (talla * talla); // Cálculo del IMC
                     document.getElementById('imc_result').textContent = imc.toFixed(1); // Mostrar el IMC con 1 decimal
-                    document.getElementById('imc_hidden').value = imc.toFixed(1); 
+                    document.getElementById('imc_hidden').value = imc.toFixed(1);
                     // Diagnóstico según el valor de IMC
                     let diagnostico = '';
                     if (imc < 20) {
@@ -315,7 +365,7 @@
                 if (!isNaN(pesoLb)) {
                     const pesoKg = pesoLb * 0.453592;
                     document.getElementById('peso_kg').value = pesoKg.toFixed(
-                    2); // Mostrar el peso en kg con 2 decimales
+                        2); // Mostrar el peso en kg con 2 decimales
                     calcularIMC(); // Actualizar el IMC cada vez que cambie el peso
                 } else {
                     document.getElementById('peso_kg').value = '';

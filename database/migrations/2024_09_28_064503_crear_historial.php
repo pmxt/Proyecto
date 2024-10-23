@@ -13,31 +13,27 @@ return new class extends Migration
     {
         Schema::create('historial', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('paciente_cui'); // CUI del paciente, relacionado con la tabla de pacientes
-            $table->foreign('paciente_cui')->references('cui')->on('pacientes')->onDelete('cascade');
-            $table->boolean('diabetes_a')->nullable();
-            $table->boolean('diabetes_b')->nullable();
-            $table->boolean('renal_a')->nullable();
-            $table->boolean('renal_b')->nullable();
-            $table->boolean('corazon_a')->nullable();
-            $table->boolean('corazon_b')->nullable();
-            $table->boolean('hipertension_a')->nullable();
-            $table->boolean('hipertension_b')->nullable();
-            $table->boolean('drogas_a')->nullable();
-            $table->boolean('drogas_b')->nullable();
-            $table->boolean('otra_a')->nullable();
-            $table->boolean('otra_b')->nullable();
-            $table->text('especificacion');  // Especificación de cualquier otra enfermedad
-            $table->string('referido_a');    // A dónde será referido
+            $table->unsignedBigInteger('embarazo_id'); 
+            $table->foreign('embarazo_id')->references('id')->on('embarazo')->onDelete('cascade');
+
+           
+            $table->enum('diabetes', ['si', 'no']);
+            $table->enum('renal', ['si', 'no']);
+            $table->enum('corazon', ['si', 'no']);
+            $table->enum('hipertension', ['si', 'no']);
+            $table->enum('drogas', ['si', 'no']);
+            $table->enum('otra', ['si', 'no']);
+
+            
+            $table->text('especificacion');  
+            $table->string('referido_a');    
             $table->date('fecha');
             $table->string('responsable');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+   
     public function down(): void
     {
         Schema::dropIfExists('historial');

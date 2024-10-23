@@ -21,41 +21,68 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\CoberturaPrenatalController;
 use App\Http\Controllers\ReporteController;
 use App\Notifications\CitasNotification;
+use Intervention\Image\Facades\Image;
+use App\Http\Controllers\TestImageController;
+use App\Http\Controllers\CitaNutricionalController;
 
 
 use App\Models\User;
 use Illuminate\Routing\RouteGroup;
 
+
 Route::get('/', function () {
     return redirect('/login');
 });
+Route::get('/enviar-notificacion-prueba', [CalendarioController::class, 'enviarNotificacionPrueba']);
+
+
+
+
+
+
 
 // ---------Rutas para el login y usurio ------------------------
 Auth::routes();
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/Usuarios', [UserController::class, 'listarUsuarios'])->name('listaUsuarios');
+});
+
+    
+
+
 Route::middleware('auth')->get('/perfil', [UserController::class, 'perfil'])->name('perfil');
 Route::middleware('auth')->post('/perfil/actualizar', [UserController::class, 'actualizar'])->name('perfil.actualizar');
 
 Route::middleware(['auth'])->group(function () {
 
-    // ---------rutas para funcionalidad  privadas  ------------------------
-    Route::get('/Usuarios', [UserController::class, 'listarUsuarios'])->name('listaUsuarios');
+    // ---------rutas para funcionalidad  privadas para el admin  ------------------------
+  
+   
     Route::get('/users/edit/{id}', [UserController::class, 'editar'])->name('users.edit');
     Route::put('/users/update/{id}', [UserController::class, 'actualizar'])->name('users.update');
     Route::delete('/users/delete/{id}', [UserController::class, 'eliminar'])->name('users.destroy');
-    Route::get('/users/editar/{id}', [UserController::class, 'edit'])->name('users.password');
 
-    Route::put('/users/update-password/{id}', [UserController::class, 'actualizarPassword'])->name('users.updatePassword');
-    // Asignar rol de usuario
     Route::put('/users/{id}/asignar-rol', [UserController::class, 'asignarRol'])->name('asignar.rol');
 
-//---------------------------------------visualizacion general del paciente ----------------------------------------------------------------//
+
+    Route::get('/users/editar', [UserController::class, 'edit'])->name('users.password');
+
+    Route::get('/users/editP', [UserController::class, 'editarperfil'])->name('users.editP');
+    Route::POST('/users/updateP', [UserController::class, 'actualizarperfil'])->name('users.updateP');
+
+    Route::POST('/users/update-password', [UserController::class, 'actualizarPassword'])->name('users.updatePassword');
+   
+ 
+
+    //---------------------------------------visualizacion general del paciente ----------------------------------------------------------------//
 
     // ------------------------------listar los pacientes ---------------------------
     Route::get('/paciente/lista', [R_ObstetricoController::class, 'listarpacientes'])->name('pacientes.listar');
-//--------------------------------------------------------------------------------------------------------------------------------------------//
+    //--------------------------------------------------------------------------------------------------------------------------------------------//
 
 
-//-----------------------------------------------------------Rutas especificas de registro de paciente --------------------------------------//
+    //-----------------------------------------------------------Rutas especificas de registro de paciente --------------------------------------//
 
 
     // controla las rutas para cada step de mi registro de nuevo paciente anexo>ficha 1 ------------------------------------
@@ -67,8 +94,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/nuevo/datos_esposo', [R_ObstetricoController::class, 'storeStep2'])->name('registro.storeStep2');
 
     // guarda los antecedentes del paciente anexo>ficha1 ---------------------
-    Route::get('/paciente/antecedentes', [AntecedentesObstetricosController::class, 'step'])->name('antecedentes.show');
-    Route::post('/paciente/antecedentes', [AntecedentesObstetricosController::class, 'submit'])->name('antecedentes.submit');
+    // Ruta para mostrar el formulario de antecedentes, pasando embarazo_id como parámetro
+    Route::get('/paciente/antecedentes/{embarazo_id}', [AntecedentesObstetricosController::class, 'step'])->name('antecedentes.show');
+    Route::post('/paciente/antecedentes/{embarazo_id}', [AntecedentesObstetricosController::class, 'submit'])->name('antecedentes.submit');
+    
 
     // guarda el historial del embarazo de la paciente  anexo>ficha1----------
     Route::get('/embarazo', [embarazo::class, 'mostrarFormulario'])->name('embarazo.mostrar');
@@ -77,19 +106,19 @@ Route::middleware(['auth'])->group(function () {
     // guarda el historial de la paciente el historial clinico anexo>ficha1 ---------
     Route::get('/historial', [historialClinico::class, 'mostrarFormulario'])->name('historial.mostrar');
     Route::post('/historial', [historialClinico::class, 'guardarHistorial'])->name('historial.guardar');
-//----------------------------------------------------------------------------------------------------------------------------------------------------//
+    //----------------------------------------------------------------------------------------------------------------------------------------------------//
 
 
 
-// ------------------------------------------Ficha de atencion a la embarazada -----------------------------------------------------------------//
+    // ------------------------------------------Ficha de atencion a la embarazada -----------------------------------------------------------------//
 
     //------------------------------- seguimiento nutricional-----------
     Route::get('/embarazo/nutricion', [EmbarazoController::class, 'obtener'])->name('nutricion.Obtener');
     Route::post('/embarazo/nutricion', [EmbarazoController::class, 'guardar'])->name('nutricion.guardar');
-//-------------------------------------------------------------------------------------------------------------------------------------------//
+    //-------------------------------------------------------------------------------------------------------------------------------------------//
 
 
-// --------------------------------------- Ficha prenatal yo post parto ---------------------------------------------------------------------//
+    // --------------------------------------- Ficha prenatal yo post parto ---------------------------------------------------------------------//
 
     //------------------------------- seguimiento prenatal ----------
     Route::get('/embarazo/consulta1', [ConsultaPrenatal::class, 'obtener'])->name('consulta.Obtener');
@@ -110,11 +139,12 @@ Route::middleware(['auth'])->group(function () {
     //------------------------------- Asignacion de suplementos  ----------
     Route::get('/medicamentos/asignar/{examenFisicoId}', [AsignarMedicamentoController::class, 'obtener'])->name('medicamentos.asignar');
     Route::post('/medicamentos/asignar/{examenFisicoId}', [AsignarMedicamentoController::class, 'guardar'])->name('medicamentos.asignar.guardar');
-//-------------------------------------------------------------------------------------------------------------------------------------------//
+    //-------------------------------------------------------------------------------------------------------------------------------------------//
 
     //------------------------------ rutas para el calendario de citas ---------
     Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario.index')->middleware('auth');
     Route::get('/calendario/citas', [CalendarioController::class, 'getCitas'])->name('calendario.citas');
+    Route::get('/verificar-citas', [CalendarioController::class, 'verificarCitasDiarias']);
 
 
 
@@ -141,18 +171,20 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-    // en proceso de desarrollo para generar los pdfs 
-
-    //Route::post('/reporte-paciente', [PDFController::class, 'generarPDF'])->name('reporte-paciente');
-
 
 
 
     //-------------- falta por terminar -----------------------
     // listado de pacientes dashbord
 
+    Route::get('/citas/nutricionales', [CitaNutricionalController::class, 'getCitasNutricionales']);
+    Route::post('/citas/nutricionales/agendar', [CitaNutricionalController::class, 'agendarNuevaCita'])->name('citas.nutricionales.agendar');
 
 
+    Route::get('/obtener-embarazos', [ConsultaPrenatal::class, 'obtenerEmbarazos'])->name('obtener.embarazos');
+
+
+   
 
 
 
@@ -169,13 +201,16 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/grafica3', [GraficaController::class, 'mostrarGrafica3'])->name('grafica3');
     Route::get('/grafica4', [GraficaController::class, 'mostrarGrafica4'])->name('grafica4');
 });
+
+
+Route::get('/descargar-reporte-cita/{consultaId}', [AsignarMedicamentoController::class, 'descargarReporteCita'])->name('reporte.descargar');
+
+
 // sigo en la pruebas en caliente 
+// Mostrar la vista para seleccionar el tipo de reporte y el embarazo
 Route::get('/seleccionar-reporte/{paciente}', [ReporteController::class, 'mostrarVista'])->name('mostrarVistaReporte');
 Route::post('/descargar-reporte', [ReporteController::class, 'descargarReporte'])->name('reporte-paciente');
-
-//------------------------------- listo cada uno de mis reportes ------------------------------------------------------//
-Route::get('/reporte/obstetrico/{pacienteCui}', [ReporteController::class, 'reporteObstetrico'])->name('reporte.obstetrico');
-Route::get('/reporte/prenatal/{pacienteCui}', [ReporteController::class, 'reportePrenatal'])->name('reporte.prenatal');
-Route::get('/reporte/seguimiento/{pacienteCui}', [ReporteController::class, 'reporteSeguimiento'])->name('reporte.seguimiento');
-Route::get('/reporte/examen/{pacienteCui}', [ReporteController::class, 'reporteExamen'])->name('reporte.examen');
-
+Route::get('/reporte/obstetrico/{pacienteCui}/{embarazoId}', [ReporteController::class, 'reporteObstetrico'])->name('reporte.obstetrico');
+Route::get('/reporte/prenatal/{pacienteCui}/{embarazoId}', [ReporteController::class, 'reportePrenatal'])->name('reporte.prenatal');
+Route::get('/reporte/seguimiento/{pacienteCui}/{embarazoId}', [ReporteController::class, 'reporteSeguimiento'])->name('reporte.seguimiento');
+Route::get('/reporte/examen/{pacienteCui}/{embarazoId}', [ReporteController::class, 'reporteExamen'])->name('reporte.examen');

@@ -5,19 +5,33 @@ namespace App\Http\Controllers;
 use App\Models\antecedenteObstetrico;
 use Illuminate\Http\Request;
 
+use App\Models\Embarazo;
+
 class AntecedentesObstetricosController extends Controller
 {
     public function step()
     {
-        $datos = session('antecedentes_obstetricos', []); // Recupera los datos de la sesión o un array vacío si no hay datos
-        $currentStep = 3; // Estás en el paso 1
-        $totalSteps = 5;  // Suponiendo que tienes 3 pasos en total
-        return view('layouts.antecedentes_obstetricos', compact('datos', 'currentStep', 'totalSteps'));
-    }
+        $datos = session('Antecedentes_Obstetrico',[]);
+        
+        $currentStep = 3; 
+        $totalSteps = 5;  
+        $embarazo_id = session('step1')['embarazo_id'] ?? null;
+        if ($embarazo_id) {
+            $embarazo = Embarazo::find($embarazo_id);
+        } else {
+            // Manejar el caso donde no hay embarazo_id disponible
+            $embarazo = null;
+        }
 
+        
+        return view('layouts.antecedentes_obstetricos', compact('datos','embarazo','currentStep', 'totalSteps'));
+
+    }
+    
     public function submit(Request $request)
     {
-        // Validar los datos
+        
+  
         $validated = $request->validate([
             'num_embarazos' => 'required|numeric',
             'num_partos' => 'required|numeric',
@@ -27,8 +41,6 @@ class AntecedentesObstetricosController extends Controller
             'num_hijos_nacidos_muertos' => 'required|numeric',
             'num_hijos_vivos' => 'required|numeric',
             'num_hijos_fallecidos' => 'required|numeric',
-
-
             'muerte_fetal' => 'required|in:si,no',
             'abortos_consecutivos' => 'required|in:si,no',
             'gestas' => 'required|in:si,no',
@@ -38,12 +50,10 @@ class AntecedentesObstetricosController extends Controller
             'cirugias_reproductor' => 'required|in:si,no',
         ]);
 
-        // Obtener el ID del paciente (asegúrate de tener este valor disponible)
-        $pacienteCui = session('step1')['cui']; // Ejemplo, asegúrate de tener este valor en sesión o desde otra fuente
+        $embarazo_id = session('step1')['embarazo_id'];
 
-        // Guardar los datos en la base de datos
         antecedenteObstetrico::create([
-            'paciente_cui' => $pacienteCui, // Debes obtener el paciente CUI de forma correcta
+           'embarazo_id' => $embarazo_id, 
             'muerte_fetal' => $validated['muerte_fetal'],
             'abortos_consecutivos' => $validated['abortos_consecutivos'],
             'gestas' => $validated['gestas'],
@@ -63,10 +73,10 @@ class AntecedentesObstetricosController extends Controller
 
         ]);
 
-        // Guardar en sesión los datos temporalmente si es necesario
+        
         session(['antecedentes_obstetricos' => $validated]);
 
-        // Redirigir al usuario a la página deseada con un mensaje de éxito
+        
         return redirect()->route('embarazo.mostrar')->with('success', 'Datos guardados correctamente.');
     }
 }

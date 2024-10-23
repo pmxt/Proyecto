@@ -4,49 +4,44 @@
     <link rel="stylesheet" href="{{ asset('css/estilosU.css') }}">
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        /* Reducir el tamaño de la letra para la tabla */
         .table td,
         .table th {
             font-size: 0.8rem;
-            /* Ajusta el tamaño de la letra a tu preferencia */
+            
         }
 
         .table input {
             font-size: 0.8rem;
-            /* Ajusta el tamaño de las entradas también */
+         
             padding: 0.25rem;
-            /* Reducir el padding dentro de los inputs */
+           
         }
 
         .card {
             padding: 1.5rem;
-            /* Un padding más pequeño para hacer todo más compacto */
         }
 
         .form-control {
             font-size: 0.9rem;
-            /* Reducir el tamaño de letra en los campos de formulario */
+            
         }
     </style>
 @endsection
 
 @section('content')
     <div class="container">
-        <!-- Botón de Volver -->
+    
         <div class="mb-4">
             <a href="{{ route('home') }}" class="btn btn-primary">Volver</a>
         </div>
-        <!-- Nueva estructura con card de Bootstrap -->
+    
         <div class="card shadow-sm p-4 mt-4">
             <h2 class="text-center">Cobertura Acumulada del Primer Control Prenatal</h2>
-
-            <!-- Botones para redirigir a las vistas adicionales -->
-            <div class="mb-3 text-center">
-                <a href="{{ route('ingresarMes', ['anio' => $anioSeleccionado]) }}" class="btn btn-secondary">Ingresar Datos
-                    de Mes</a>
+           
+            <div class="mb-3 d-flex flex-column flex-md-row justify-content-center">
+                <a href="{{ route('ingresarMes', ['anio' => $anioSeleccionado]) }}" class="btn btn-secondary mr-md-2 mb-2 mb-md-0">Ingresar Datos de Mes</a>
                 <a href="{{ route('ingresarAnio') }}" class="btn btn-secondary">Agregar Nuevo Año</a>
             </div>
-
             <!-- Selección de Año -->
             <form method="GET" action="{{ route('grafica1') }}">
                 <label for="anio">Seleccionar Año:</label>
@@ -83,8 +78,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="embarazos_esperados" class="form-label">Total de Embarazos Esperados:</label>
-                    <input type="number" id="embarazos_esperados" class="form-control" value="{{ $embarazosEsperados }}"
-                        disabled>
+                    <input type="number" id="embarazos_esperados" class="form-control" value="{{ $embarazosEsperados }}" disabled>
                 </div>
             </div>
 

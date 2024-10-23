@@ -1,0 +1,24 @@
+
+  @page {
+    size: 8.5in 11in; /* Tamaño carta en pulgadas */
+    margin: 1in; /* Márgenes de 1 pulgada */
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    width: 8.5in;
+    height: 11in;
+  }
+
+  .page {
+    width: 100%;
+    height: 100%;
+    page-break-after: always;
+    overflow: hidden;
+  }
+
+  .scaled-content {
+    transform: scale(0.95); /* Ajusta el tamaño según sea necesario */
+    transform-origin: top left;
+  }

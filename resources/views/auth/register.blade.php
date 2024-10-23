@@ -15,8 +15,18 @@
         crossorigin="anonymous"
     >
 </head>
+
 <body>
     <div class="wrapper">
+        @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
         <div class="logo">
             <img src="{{ asset('imagenes/302464652_537376068387806_7427466127821357187_n.png') }}" alt="">
         </div>

@@ -49,11 +49,11 @@ class  examen1Controller extends Controller
 
         ]);
 
-        // obtener el id de la consulta 
+    
         
         $consultaId = session('obtener1')['id'];
 
-        // Crear el examen físico relacionado con la consulta prenatal
+     
         $examenFisico =  ExamenFisico::create([
             'consulta_prenatal_id' => $consultaId,
             'presion_arterial' => $validated['presion_arterial'],
@@ -84,7 +84,7 @@ class  examen1Controller extends Controller
         session(['datos' => $validated]);
         
 
-        // Redirigir al siguiente paso
+        
         return redirect()->route('signos.obtener', ['examenFisicoId' => $examenFisico->id])
         ->with('success', 'Examen físico guardado correctamente.');
     }

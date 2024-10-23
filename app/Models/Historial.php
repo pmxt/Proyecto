@@ -10,7 +10,7 @@ class Historial extends Model
     use HasFactory;
     protected $table = 'historial';
     protected $fillable = [
-        'paciente_cui',
+        'embarazo_id',
         'diabetes_a',
         'diabetes_b',
         'renal_a',
@@ -28,8 +28,8 @@ class Historial extends Model
         'fecha',
         'responsable',
     ];
-    public function paciente()
+    public function embarazo()
     {
-        return $this->belongsTo(Paciente::class, 'paciente_cui', 'cui');
+        return $this->belongsTo(Embarazo::class);
     }
 }

@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class ModeloEmbarazo_Actual extends Model
 {
     use HasFactory;
-    protected $table = 'nuevoE'; // Cambia el nombre de la tabla según corresponda
+    protected $table = 'nuevoE'; 
     protected $fillable = [
-        'paciente_cui',
+        'embarazo_id',
         'numero_control',
         'fecha_control',
         'peso_libras',
@@ -23,8 +23,8 @@ class ModeloEmbarazo_Actual extends Model
          'diagnostico' 
 
     ];
-    public function paciente()
+    public function embarazo()
     {
-        return $this->belongsTo(Paciente::class, 'paciente_cui', 'cui');
+        return $this->belongsTo(Embarazo::class);
     }
 }

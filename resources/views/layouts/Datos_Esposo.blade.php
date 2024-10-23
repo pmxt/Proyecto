@@ -6,83 +6,127 @@
 @endsection
 
 @section('content')
-<div class="container">
-    <h2 class="text-center">Registro de Consulta Prenatal</h2>
+    <div class="container">
+        <h2 class="text-center">Ficha de Registro Obstétrico Del Ministerio De Salud Pública y Asistencia Social</h2>
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    <form action="{{ route('consulta.guardar') }}" method="POST">
-        @csrf
-        <div class="form-group">
-            <label for="paciente">Seleccionar Paciente</label>
-            <select name="paciente_cui" id="paciente" class="form-control" required>
-                <option value="">-- Selecciona una paciente --</option>
-                @foreach($pacientes as $paciente)
-                    <option value="{{ $paciente->cui }}" {{ old('paciente_cui', $datos['paciente_cui'] ?? '') == $paciente->cui ? 'selected' : '' }}>
-                        {{ $paciente->name }} - {{ $paciente->cui }}
-                    </option>
-                @endforeach
-            </select>
+        <!-- Barra de progreso -->
+        <div class="progress mb-4">
+            <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0"
+                aria-valuemax="100">
+                Paso 2 de 2
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="fecha_consulta">Fecha de la Consulta</label>
-            <input type="date" id="fecha_consulta" name="fecha_consulta" class="form-control" value="{{ old('fecha_consulta', $datos['fecha_consulta'] ?? '') }}" required>
-        </div>
+        <form action="{{ route('registro.storeStep2') }}" method="POST">
+            @csrf
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+            @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                {{ session('success') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!-- Solo redirige al dar clic en aceptar -->
+            <a href="{{ route('registro.paso1') }}" class="btn btn-primary">Aceptar</a>
+        @endif
 
-        <div class="form-group">
-            <label for="tipo_servicio">Tipo de Servicio</label>
-            <select name="tipo_servicio" id="tipo_servicio" class="form-control" required>
-                <option value="">Seleccione el tipo de servicio</option>
-                <option value="PSF" {{ old('tipo_servicio', $datos['tipo_servicio'] ?? '') == 'PSF' ? 'selected' : '' }}>PSF</option>
-                <option value="C/S 'A'" {{ old('tipo_servicio', $datos['tipo_servicio'] ?? '') == 'C/S \'A\'' ? 'selected' : '' }}>C/S 'A'</option>
-                <option value="C/S 'B'" {{ old('tipo_servicio', $datos['tipo_servicio'] ?? '') == 'C/S \'B\'' ? 'selected' : '' }}>C/S 'B'</option>
-                <option value="CENAPA" {{ old('tipo_servicio', $datos['tipo_servicio'] ?? '') == 'CENAPA' ? 'selected' : '' }}>CENAPA</option>
-                <option value="CAP" {{ old('tipo_servicio', $datos['tipo_servicio'] ?? '') == 'CAP' ? 'selected' : '' }}>CAP</option>
-                <option value="CAIMI" {{ old('tipo_servicio', $datos['tipo_servicio'] ?? '') == 'CAIMI' ? 'selected' : '' }}>CAIMI</option>
-            </select>
-        </div>
+            <div class="form-group">
+                <label>CUI</label>
+                <input type="number" name='cui' class="form-control" value="{{ old('cui', $datos['cui'] ?? '') }}"
+                    required>
+            </div>
 
-        <div class="form-group">
-            <label for="area_salud">Área de Salud</label>
-            <input type="text" name="area_salud" id="area_salud" class="form-control" value="{{ old('area_salud', $datos['area_salud'] ?? '') }}" placeholder="Ingrese el área de salud" required>
-        </div>
+            <div class="form-group">
+                <label>Nombre del esposo o conviviente</label>
+                <input type="text" name="nombreEsposo" class="form-control"
+                    value="{{ old('nombreEsposo', $datos['nombreEsposo'] ?? '') }}" required>
+            </div>
 
-        <div class="form-group">
-            <label for="nombre_servicio">Distrito</label>
-            <input type="text" name="nombre_servicio" id="nombre_servicio" class="form-control" value="{{ old('nombre_servicio', $datos['nombre_servicio'] ?? '') }}" placeholder="Ingrese el nombre del servicio" required>
-        </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Fecha de Nacimiento</label>
+                    <input type="date" name="fecha_nacimiento" id="fecha_nacimiento" class="form-control"
+                        value="{{ old('fecha_nacimiento', $datos['fecha_nacimiento'] ?? '') }}" required>
+                </div>
 
-        <div class="form-group">
-            <label for="motivo_consulta">Motivo de la Consulta</label>
-            <select name="motivo_consulta" id="motivo_consulta" class="form-control" required>
-                <option value="">Seleccione el motivo de la consulta</option>
-                <option value="Pre Natal" {{ old('motivo_consulta', $datos['motivo_consulta'] ?? '') == 'Pre Natal' ? 'selected' : '' }}>Embarazo</option>
-                <option value="Parto" {{ old('motivo_consulta', $datos['motivo_consulta'] ?? '') == 'Parto' ? 'selected' : '' }}>Parto</option>
-                <option value="Post Natal" {{ old('motivo_consulta', $datos['motivo_consulta'] ?? '') == 'Post Natal' ? 'selected' : '' }}>Postparto</option>
-            </select>
-        </div>
+                <div class="form-group col-md-6">
+                    <label>Edad en años</label>
+                    <input type="number" id="edad" name="edad" class="form-control"
+                        value="{{ old('edad', $datos['edad'] ?? '') }}" readonly>
+                </div>
+            </div>
 
-        <div class="form-group">
-            <label for="tipo_consulta">Tipo de Consulta</label>
-            <input type="text" id="tipo_consulta" name="tipo_consulta" class="form-control" value="{{ old('tipo_consulta', $datos['tipo_consulta'] ?? '') }}" placeholder="Consulta prenatal, control rutinario, etc." required>
-        </div>
+            <div class="form-group">
+                <label>Pueblo</label>
+                <div class="d-flex flex-wrap">
+                    <div class="mr-3">
+                        <input type="radio" name="pueblos" value="Maya" id="maya"
+                            {{ old('pueblos', $datos['pueblos'] ?? '') == 'Maya' ? 'checked' : '' }} required>
+                        <label for="maya">Maya</label>
+                    </div>
+                    <div class="mr-3">
+                        <input type="radio" name="pueblos" value="Xinca" id="xinca"
+                            {{ old('pueblos', $datos['pueblos'] ?? '') == 'Xinca' ? 'checked' : '' }}>
+                        <label for="xinca">Xinca</label>
+                    </div>
+                    <div class="mr-3">
+                        <input type="radio" name="pueblos" value="Garifuna" id="garifuna"
+                            {{ old('pueblos', $datos['pueblos'] ?? '') == 'Garifuna' ? 'checked' : '' }}>
+                        <label for="garifuna">Garífuna</label>
+                    </div>
+                    <div class="mr-3">
+                        <input type="radio" name="pueblos" value="Mestizo" id="mestizo"
+                            {{ old('pueblos', $datos['pueblos'] ?? '') == 'Mestizo' ? 'checked' : '' }}>
+                        <label for="mestizo">Mestizo</label>
+                    </div>
+                </div>
+            </div>
 
-        <!-- Botón para Enviar el Formulario -->
-        <button type="submit" class="btn btn-success">Guardar y continuar</button>
-    </form>
+            <div class="form-group">
+                <label>Escolaridad</label>
+                <input type="text" name="Escolaridad" class="form-control"
+                    value="{{ old('Escolaridad', $datos['Escolaridad'] ?? '') }}">
+            </div>
 
-    <div class="mt-4">
-        <a href="" class="btn btn-secondary">Realizar Examen Físico</a>
-        <a href="" class="btn btn-warning">Evaluar Signos y Síntomas de Peligro</a>
+            <div class="form-group">
+                <label>Ocupación</label>
+                <input type="text" name="Ocupacion" class="form-control"
+                    value="{{ old('Ocupacion', $datos['Ocupacion'] ?? '') }}">
+            </div>
+
+            <div class="form-group">
+                <label>Estado civil</label>
+                <input type="text" name="estado_civil" class="form-control"
+                    value="{{ old('estado_civil', $datos['estado_civil'] ?? '') }}">
+            </div>
+
+            <a href="{{ route('registro.paso1') }}" class="btn btn-warning">Volver</a>
+            <!-- Enlace para volver al paso 1 -->
+            <button type="submit" class="btn btn-success">Finalizar</button>
+        </form>
+
+        <script>
+            document.getElementById('fecha_nacimiento').addEventListener('change', function() {
+                const fechaNacimiento = new Date(this.value);
+                const fechaActual = new Date();
+                let edad = fechaActual.getFullYear() - fechaNacimiento.getFullYear();
+                const mesActual = fechaActual.getMonth();
+                const mesNacimiento = fechaNacimiento.getMonth();
+                if (mesActual < mesNacimiento || (mesActual === mesNacimiento && fechaActual.getDate() < fechaNacimiento
+                        .getDate())) {
+                    edad--;
+                }
+                document.getElementById('edad').value = edad;
+            });
+        </script>
     </div>
-</div>
 @endsection

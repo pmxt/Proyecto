@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class Controllerconsejeria extends Controller
 {
-      // Función para mostrar el formulario de consejería
+     
       public function obtener($examenFisicoId)
       {
         $currentStep = 4;
@@ -15,10 +15,10 @@ class Controllerconsejeria extends Controller
           return view('layouts.consejeria', compact('examenFisicoId'));
       }
   
-      // Función para guardar los datos de consejería
+     
       public function guardar(Request $request, $examenFisicoId)
       {
-          // Validación de los campos
+         
           $validated = $request->validate([
               'alimentacion' => 'required|in:SI,NO',
               'senales_peligro_embarazo' => 'required|in:SI,NO',
@@ -34,7 +34,7 @@ class Controllerconsejeria extends Controller
 
           $examenFisicoId = session('obtener2')['id'] ?? $examenFisicoId;
   
-          // Guardar los datos de consejería relacionados con el examen físico
+         
           ModeloConsejeria::create([
               'examen_fisico_id' => $examenFisicoId,
               'alimentacion' => $validated['alimentacion'],
@@ -48,7 +48,7 @@ class Controllerconsejeria extends Controller
               'vacunacion' => $validated['vacunacion'],
           ]);
   
-          // Redirigir al siguiente paso (medicamentos o citas) o mostrar un mensaje de éxito
+         
           return redirect()->route('medicamentos.asignar', ['examenFisicoId' => $examenFisicoId])
                            ->with('success', 'Consejería guardada correctamente.');
       }

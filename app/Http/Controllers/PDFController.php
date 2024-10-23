@@ -15,10 +15,9 @@ class PDFController extends Controller
     {
         $pacientes = Paciente::with('encargados','Historial')->get();
         
-        // Pasar los datos a la vista
+     
         $pdf = PDF::loadView('layouts.Reporte', compact('pacientes'));
 
-        // Descargar el PDF
         return $pdf->download('reporte-todos-los-pacientes.pdf');
       
     }

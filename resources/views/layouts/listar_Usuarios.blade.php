@@ -33,21 +33,18 @@
                             <td class="min-w-44">{{ $user->name }}</td>
                             <td class="min-w-44">{{ $user->email }}</td>
                             <td>
-                                <!-- Botón de editar -->
-                                <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm">
-                                    <i class="fa fa-edit"></i>
-                                </a>
-                                <a href="{{ route('users.password', $user->id) }}" class="btn btn-primary btn-sm">
+                               
+                                <a href=" {{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm">
                                     <i class="fa fa-edit"></i>
                                 </a>
 
-                                <!-- Botón de eliminar -->
+                               
                                 <button type="button" class="btn btn-danger btn-sm"
                                     onclick="confirmDelete({{ $user->id }}, '{{ $user->name }}')">
                                     <i class="fa fa-trash"></i>
                                 </button>
 
-                                <!-- Formulario de eliminación oculto -->
+                            
                                 <form id="delete-form-{{ $user->id }}" action="{{ route('users.destroy', $user->id) }}"
                                     method="POST" style="display: none;">
                                     @csrf
@@ -59,7 +56,7 @@
                 </tbody>
             </table>
 
-            {{ $users->links() }} <!-- Paginación -->
+            {{ $users->links() }} 
         </div>
     </div>
     <script>
@@ -75,7 +72,7 @@
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Si el usuario confirma la eliminación, enviamos el formulario
+                    
                     document.getElementById('delete-form-' + id).submit();
                 }
             });

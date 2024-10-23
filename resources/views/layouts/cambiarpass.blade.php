@@ -4,7 +4,7 @@
     <div class="container">
         <h2>Actualizar Contraseña del Usuario</h2>
 
-        <!-- Mostrar errores de validación -->
+     
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -15,17 +15,16 @@
             </div>
         @endif
 
-        <!-- Mostrar mensaje de éxito -->
+      
         @if (session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
         @endif
 
-        <form action="{{ route('users.updatePassword', $user->id) }}" method="POST">
+        <form action="{{ route('users.updatePassword') }}" method="POST">
             @csrf
-            @method('PUT') <!-- Para que funcione correctamente la actualización -->
-            <!-- Para que funcione correctamente la actualización -->
+            @method('POST') 
 
             <div class="form-group">
                 <label>Contraseña actual</label>

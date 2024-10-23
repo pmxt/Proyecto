@@ -14,8 +14,10 @@ return new class extends Migration
 
         Schema::create('nuevoE', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('paciente_cui');
-            $table->foreign('paciente_cui')->references('cui')->on('pacientes')->onDelete('cascade');
+
+            $table->unsignedBigInteger('embarazo_id');
+            $table->foreign('embarazo_id')->references('id')->on('embarazo')->onDelete('cascade');  // Relación con la tabla 'embarazo'
+
             $table->integer('numero_control');
             $table->date('fecha_control');
             $table->float('peso_libras');

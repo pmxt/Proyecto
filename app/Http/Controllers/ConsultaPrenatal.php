@@ -8,30 +8,33 @@ use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Validate;
+use App\Models\Embarazo;
 
 class ConsultaPrenatal extends Controller
 {
 
-
-
-    // funciones para mostrar la primera cita 
-    // en esta seleccionamos el paciente 
-    public function obtener()
+    public function obtener(Request $request)
     {
         $datos = session('obtener1', []);
-        $currentStep = 1; // Estás en el paso 1
-        $totalSteps = 4;  // Suponiendo que tienes 3 pasos en total
+        $currentStep = 1;
+        $totalSteps = 4;
 
         $pacientes = Paciente::all();
+        $embarazos = [];
 
-        return view('layouts.consultas_prenatales', compact('datos', 'currentStep', 'totalSteps','pacientes'));
+        if ($request->has('paciente_cui')) {
+            $embarazos = Embarazo::where('paciente_cui', $request->paciente_cui)->get();
+        }
+
+        return view('layouts.consultas_prenatales', compact('datos', 'currentStep', 'totalSteps', 'pacientes', 'embarazos'));
     }
 
-    // funcion apra guaradar la primera cita 
+  
     public function guardar(Request $request)
     {
         $validated = $request->validate([
             'paciente_cui' => 'required|exists:pacientes,cui',
+            'embarazo_id' => 'required|exists:embarazo,id',
             'fecha_consulta' => 'required|date',
             'tipo_servicio' => 'required',
             'area_salud' => 'required|string',
@@ -42,8 +45,11 @@ class ConsultaPrenatal extends Controller
 
 
         ]);
-        $consulta= consulta1::create([
+        
+        $consulta = consulta1::create([
+            'embarazo_id' => $validated['embarazo_id'],
             'paciente_cui' => $validated['paciente_cui'],
+            
             'fecha_consulta' => $validated['fecha_consulta'],
             'tipo_servicio' => $validated['tipo_servicio'],
             'area_salud' => $validated['area_salud'],
@@ -51,11 +57,13 @@ class ConsultaPrenatal extends Controller
             'motivo_consulta' => $validated['motivo_consulta'],
             'tipo_consulta' => $validated['tipo_consulta'],
         ]);
-
-        // Obtener el ID de la consulta recién creada
-
-        session(['obtener1' => ['id' => $consulta->id]]);
         
-        return redirect()->route('examen.Obtener',['consultaId' => $consulta->id])->with('success', 'Datos de la consulta guardados correctamente');
+
+        session([
+            'obtener1' => ['id' => $consulta->id],
+            'embarazo_id' => $validated['embarazo_id'], // Asegurar que 'embarazo_id' esté en la sesión
+        ]);
+
+        return redirect()->route('examen.Obtener', ['consultaId' => $consulta->id])->with('success', 'Datos de la consulta guardados correctamente');
     }
 }

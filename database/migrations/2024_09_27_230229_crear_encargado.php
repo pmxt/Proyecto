@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('encargados', function (Blueprint $table) {
             $table->bigInteger('cui')-> primary(); 
-            $table->bigInteger('paciente_cui'); // CUI del paciente
+            $table->bigInteger('paciente_cui'); 
             $table->foreign('paciente_cui')->references('cui')->on('pacientes')->onDelete('cascade'); // Relación con 'pacientes'
             $table->string('nombreEsposo');
             $table->date('fecha_nacimiento');
@@ -26,9 +26,7 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    
     public function down(): void
     {
         Schema::dropIfExists('encargados');

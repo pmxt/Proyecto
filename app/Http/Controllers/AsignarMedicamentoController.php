@@ -8,94 +8,162 @@ use App\Models\ExamenFisico;
 use App\Models\Medicamento;
 use App\Models\Modelmedicamento;
 use App\Models\SuplementoAsignado;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+
 
 class AsignarMedicamentoController extends Controller
 {
-    // Muestra la vista para asignar medicamentos a una paciente
+
     public function obtener($examenFisicoId)
     {
-        // Obtener todos los medicamentos disponibles
+
         $medicamentos = Modelmedicamento::all();
 
-        return view('layouts.asignar_medicamento', compact('medicamentos', 'examenFisicoId'));
+        $examenFisico = ExamenFisico::with('consultaPrenatal.paciente')->findOrFail($examenFisicoId);
+        $paciente = $examenFisico->consultaPrenatal->paciente;
+        //dd($paciente->cui);
+
+        $paciente = $examenFisico->consultaPrenatal->paciente;
+
+        return view('layouts.asignar_medicamento', compact('medicamentos', 'examenFisicoId', 'paciente'));
     }
 
-    // Guardar los medicamentos asignados a una paciente
     public function guardar(Request $request, $examenFisicoId)
     {
-        // Validar que al menos un medicamento haya sido seleccionado y que las cantidades sean válidas
-        $validated = $request->validate([
-            'medicamentos' => 'required|array',
-            'cantidades' => 'required|array',
-            'cantidades.*' => 'integer|min:1', // Cada cantidad debe ser un entero mayor que 0
-        ]);
 
-        foreach ($validated['medicamentos'] as $key => $medicamentoId) {
-            $medicamento = Modelmedicamento::find($medicamentoId);
-            $cantidadAsignada = $validated['cantidades'][$key];
+        DB::beginTransaction();
 
-            // Verificar si hay suficiente cantidad del medicamento disponible
-            if ($medicamento->cantidad >= $cantidadAsignada) {
-                SuplementoAsignado::create([
-                    'examen_fisico_id' => $examenFisicoId,
-                    'medicamento_id' => $medicamentoId,
-                    'cantidad_asignada' => $cantidadAsignada,
-                ]);
+        try {
 
-                // Reducir la cantidad del medicamento disponible
-                $medicamento->decrement('cantidad', $cantidadAsignada);
-            } else {
-                return redirect()->back()->withErrors(['No hay suficiente stock de ' . $medicamento->nombre]);
+            $validated = $request->validate([
+                'paciente_cui' => 'required|string|exists:pacientes,cui',
+                'medicamentos' => 'required|array',
+                'cantidades' => 'required|array',
+                'cantidades.*' => 'integer|min:1',
+                'embarazo_id' => 'required|exists:embarazo,id',
+            ]);
+
+
+            foreach ($validated['medicamentos'] as $key => $medicamentoId) {
+                $medicamento = Modelmedicamento::find($medicamentoId);
+                $cantidadAsignada = $validated['cantidades'][$key];
+
+                if ($medicamento->cantidad >= $cantidadAsignada) {
+
+                    SuplementoAsignado::create([
+                        'examen_fisico_id' => $examenFisicoId,
+                        'medicamento_id' => $medicamentoId,
+                        'cantidad_asignada' => $cantidadAsignada,
+                        'embarazo_id' => $validated['embarazo_id'],
+                    ]);
+
+
+                    $medicamento->decrement('cantidad', $cantidadAsignada);
+                } else {
+
+                    throw new \Exception('No hay suficiente stock de ' . $medicamento->nombre);
+                }
             }
-        }
-        $this->agendarNuevaCita($examenFisicoId);
 
-        return redirect()->route('pacientes.listar', ['examenFisicoId' => $examenFisicoId])
-            ->with('success', 'Suplementos asignados correctamente y nueva cita agendada.');
+
+            $citaAgendada = $this->agendarNuevaCita($examenFisicoId);
+
+
+            if ($citaAgendada) {
+                DB::commit();
+                return redirect()->route('medicamentos.asignar', ['examenFisicoId' => $examenFisicoId])
+                    ->with('success', 'Suplementos asignados correctamente y nueva cita agendada. Se ha generado un PDF con los detalles.');
+            }
+
+
+            throw new \Exception('No se pudo agendar una nueva cita.');
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return redirect()->back()->withErrors([$e->getMessage()]);
+        }
     }
 
-    // Función para agendar una nueva cita prenatal
+
     private function agendarNuevaCita($examenFisicoId)
     {
-        // Obtener el examen físico y la consulta prenatal relacionada
-        $examenFisico = ExamenFisico::findOrFail($examenFisicoId);
-        $consultaPrenatal = $examenFisico->consultaPrenatal;
 
-        // Obtener las semanas de embarazo desde el examen físico
+        $examenFisico = ExamenFisico::with('consultaPrenatal.paciente')->findOrFail($examenFisicoId);
+        $consultaPrenatal = $examenFisico->consultaPrenatal;
         $semanasEmbarazo = $examenFisico->semanas_embarazo;
 
-        // Determinar la fecha de la próxima cita según las semanas de embarazo
+
         if ($semanasEmbarazo <= 12) {
-            // Si la paciente tiene 12 semanas o menos, la próxima cita es a las 26 semanas
-            $proximaFechaCita = now()->addWeeks(14); // Próxima cita en 14 semanas (hasta las 26 semanas)
+            $proximaFechaCita = now()->addWeeks(14);
         } elseif ($semanasEmbarazo <= 26) {
-            // Si la paciente tiene entre 12 y 26 semanas, la próxima cita es a las 32 semanas
-            $proximaFechaCita = now()->addWeeks(6); // Próxima cita en 6 semanas (hasta las 32 semanas)
+            $proximaFechaCita = now()->addWeeks(6);
         } elseif ($semanasEmbarazo <= 32) {
-            // Si la paciente tiene entre 26 y 32 semanas, la próxima cita es entre 36-38 semanas
-            $proximaFechaCita = now()->addWeeks(4); // Próxima cita en 4 semanas (36-38 semanas)
+            $proximaFechaCita = now()->addWeeks(4);
         } else {
-            // Si la paciente tiene más de 32 semanas, no se programan más citas prenatales
             $proximaFechaCita = null;
         }
 
-        // Si hay una próxima cita que programar (es decir, no ha terminado el ciclo prenatal)
-        if ($proximaFechaCita) {
-            // Crear la nueva consulta prenatal
-            consulta1::create([
-                'paciente_cui' => $consultaPrenatal->paciente_cui,
-                'fecha_consulta' => $proximaFechaCita,
-                'tipo_servicio' => $consultaPrenatal->tipo_servicio,
-                'area_salud' => $consultaPrenatal->area_salud,
-                'nombre_servicio' => $consultaPrenatal->nombre_servicio,
-                'motivo_consulta' => 'Control Prenatal',
-                'tipo_consulta' => 'Seguimiento',
-            ]);
+
+        if (!$proximaFechaCita) {
+            return false;
         }
 
-        // Redirigir o retornar
-        return redirect()->route('pacientes.listar', ['examenFisicoId' => $examenFisicoId])
-            ->with('success', 'Suplementos asignados correctamente y nueva cita agendada.')
-            ->with('proximaFechaCita', $proximaFechaCita ? $proximaFechaCita->toDateString() : 'No se programó nueva cita');
+        $consulta = consulta1::create([
+            'paciente_cui' => $consultaPrenatal->paciente_cui,
+            'fecha_consulta' => $proximaFechaCita,
+            'tipo_servicio' => $consultaPrenatal->tipo_servicio,
+            'area_salud' => $consultaPrenatal->area_salud,
+            'nombre_servicio' => $consultaPrenatal->nombre_servicio,
+            'motivo_consulta' => 'Control Prenatal',
+            'tipo_consulta' => 'Seguimiento',
+            'embarazo_id' => $consultaPrenatal->embarazo_id,
+        ]);
+
+
+        session()->put('consultaId', $consulta->id);
+
+        return true;
+    }
+
+
+    public function descargarReporteCita($consultaId)
+    {
+
+        $consultaPrenatal = consulta1::with('paciente')->findOrFail($consultaId);
+
+        if (!$consultaPrenatal->paciente) {
+            return redirect()->back()->withErrors('No se encontró el paciente para esta consulta.');
+        }
+
+
+        $embarazo = $consultaPrenatal->paciente->embarazos()->orderBy('fecha_probable_parto', 'desc')->first();
+
+
+        if (!$embarazo) {
+            return redirect()->back()->withErrors('No se encontró un embarazo asociado al paciente.');
+        }
+
+        $proximaFechaCita = \Carbon\Carbon::parse($consultaPrenatal->fecha_consulta->toDateString())->format('d/m/Y');
+        $fechaUltimaRegla = \Carbon\Carbon::parse($embarazo->fecha_ultima_regla)->format('d/m/Y');
+        $fechaProbableParto = \Carbon\Carbon::parse($embarazo->fecha_probable_parto)->format('d/m/Y');
+
+
+
+        $pdf = PDF::loadView('Reportes.reporte_cita', [
+            'paciente' => $consultaPrenatal->paciente,
+            'proximaFechaCita' =>  $proximaFechaCita,
+            'motivo_consulta' => 'Control Prenatal',
+            'area_salud' => $consultaPrenatal->area_salud,
+            'nombre_servicio' => $consultaPrenatal->nombre_servicio,
+            'fecha_probable_parto' => $fechaProbableParto,
+            'fecha_ultima_regla' => $fechaUltimaRegla
+
+        ]);
+
+
+        return $pdf->download('reporte_cita_' . $consultaPrenatal->paciente->name . '.pdf');
     }
 }

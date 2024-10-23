@@ -1,24 +1,40 @@
 @extends('layouts.app')
+@section('css') 
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+@endsection
 
 @section('content')
-<div class="container">
-    <h2>Perfil de Usuario</h2>
-    
-    <div class="card">
-        <div class="card-header">
-            Información Personal
+    <div class="wrapper">
+        <div class="logo text-center">
+            <img src="{{ asset('imagenes/302464652_537376068387806_7427466127821357187_n.png') }}" alt="Logo" class="img-fluid" style="max-width: 150px;">
         </div>
-        <div class="card-body">
-            <p><strong>Nombre:</strong> {{  $user->name }}</p>
-            <p><strong>Email:</strong> {{  $user->email }}</p>
-            <p><strong>Fecha de Registro:</strong> {{ $user->created_at->format('d/m/Y') }}</p>
-            <!-- Otros datos que desees mostrar -->
-        </div>
-    </div>
 
-    <!-- Botón para editar el perfil -->
-    <div class="mt-3">
-        <a href="" class="btn btn-primary">Editar Perfil</a>
+        <div class="text-center mt-4 name">
+            <h2>Perfil de Usuario</h2>
+        </div>
+
+        <div class="card mt-4 mx-auto" style="max-width: 600px;">
+            <div class="card-header text-center">
+                <h4>Información Personal</h4>
+            </div>
+            <div class="card-body">
+                <p><strong>Nombre:</strong> {{ $user->name }}</p>
+                <p><strong>Email:</strong> {{ $user->email }}</p>
+                <p><strong>Fecha de Registro:</strong> {{ $user->created_at->format('d/m/Y') }}</p>
+                
+            </div>
+        </div>
+
+      <div class="mb-3 d-flex flex-column flex-md-row justify-content-center">
+        
+            <a href=" {{ route('users.editP') }} " class="btn btn-secondary mr-md-2 mb-2 mb-md-0">Editar Perfil</a>
+        
+        
+            <a href="{{ route('users.password') }}" class="btn btn-secondary">Cambiar contraseña</a>
+
+        
+        </div>  
+        
     </div>
-</div>
 @endsection

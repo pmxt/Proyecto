@@ -56,6 +56,18 @@
                         value="{{ old('edad', $datos['edad'] ?? '') }}" readonly>
                 </div>
             </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label>Fecha de la última regla</label>
+                    <input type="date" id="fecha_ultima_regla" name="fecha_ultima_regla" class="form-control"
+                        value="{{ old('fecha_ultima_regla', $datos['fecha_ultima_regla'] ?? '') }}" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label>Fecha probable de parto</label>
+                    <input type="date" id="fecha_probable_parto" name="fecha_probable_parto" class="form-control"
+                        value="{{ old('fecha_probable_parto', $datos['fecha_probable_parto'] ?? '') }}" readonly>
+                </div>
+            </div>
             <div class="form-group">
                 <label>Migrante</label>
                 <div class="d-flex flex-wrap">
@@ -162,9 +174,9 @@
                 const fechaProbableParto = new Date(fechaUltimaRegla);
                 fechaProbableParto.setDate(fechaProbableParto.getDate() + 281);
 
-                // Formatear la fecha probable de parto al formato YYYY-MM-DD
+                
                 const year = fechaProbableParto.getFullYear();
-                const month = String(fechaProbableParto.getMonth() + 1).padStart(2, '0'); // Mes comienza en 0
+                const month = String(fechaProbableParto.getMonth() + 1).padStart(2, '0'); 
                 const day = String(fechaProbableParto.getDate()).padStart(2, '0');
                 document.getElementById('fecha_probable_parto').value = `${year}-${month}-${day}`;
             });

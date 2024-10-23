@@ -7,19 +7,19 @@ use Illuminate\Http\Request;
 
 class CoberturaPrenatalController extends Controller
 {
-    // Mostrar la gráfica para un año específico
+   
     public function verGrafica(Request $request)
 {
-    // Obtiene el año seleccionado o el año actual por defecto
+  
     $anioSeleccionado = $request->input('anio', date('Y'));
 
-    // Obtener los meses
+    
     $meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
-    // Recuperar los datos de la base de datos para ese año
+    
     $cobertura = CoberturaPrenatal::where('anio', $anioSeleccionado)->orderBy('mes')->get();
 
-    // Si no hay datos en la base de datos, inicializamos con un arreglo vacío
+   
     if ($cobertura->isEmpty()) {
         $cobertura = collect(array_fill(0, 12, (object)[
             'embarazos_realizados' => 0,
@@ -31,68 +31,67 @@ class CoberturaPrenatalController extends Controller
         ]));
     }
 
-    // Obtener los datos de "casos reales" (embarazos realizados) por mes
     $casosReales = $cobertura->pluck('embarazos_realizados')->toArray();
 
-    // Obtener los embarazos esperados por mes
+  
     $embarazosEsperadosPorMes = $cobertura->pluck('embarazos_esperados')->toArray();
 
-    // Calcular el total de embarazos esperados para el año
+   
     $embarazosEsperados = array_sum($embarazosEsperadosPorMes);
     $poblacionMeta = $cobertura->first()->poblacion_meta ?? 0;
 
-    // Obtener los datos generales del primer registro
+    
     $servicioSalud = $cobertura->first()->servicio_salud ?? '';
     $distritoSalud = $cobertura->first()->distrito_salud ?? '';
     $areaSalud = $cobertura->first()->area_salud ?? '';
     $poblacionMeta = $cobertura->first()->poblacion_meta ?? 0;
 
-    // Variables para almacenar cálculos
+
     $rezagos = [];
     $coberturaAcumulada = [];
     $coberturaMensual = [];
     $coberturaTotalAcumulada = 0;
-    $rezagoAcumuladoAnterior = 0; // Rezago acumulado desde el mes anterior
+    $rezagoAcumuladoAnterior = 0; 
 
-    // Cálculos por cada mes
+  
     foreach ($cobertura as $index => $mesData) {
-        // Calcular el rezago del mes actual
+     
         $rezagoMes = $embarazosEsperadosPorMes[$index] - $mesData->embarazos_realizados;
-        $rezagoMes = $rezagoMes > 0 ? $rezagoMes : 0; // Asegurarse de no tener rezagos negativos
+        $rezagoMes = $rezagoMes > 0 ? $rezagoMes : 0; 
 
-        // Sumar el rezago anterior
+     
         $rezagoTotal = $rezagoMes + $rezagoAcumuladoAnterior;
         $rezagos[] = $rezagoTotal;
 
-        // Actualizar el rezago acumulado para el siguiente mes
+        
         $rezagoAcumuladoAnterior = $rezagoTotal;
 
-        // Verificar si la población meta es mayor a 0 para evitar división por cero
+     
         if ($poblacionMeta > 0) {
             $coberturaMes = ($mesData->embarazos_realizados / $poblacionMeta) * 100;
         } else {
-            $coberturaMes = 0; // Si no hay población meta, la cobertura es 0
+            $coberturaMes = 0;
         }
 
         $coberturaMensual[] = round($coberturaMes, 2);
 
-        // Calcular la cobertura acumulada sumando lo del mes anterior
+        
         $coberturaTotalAcumulada += $coberturaMes;
         $coberturaAcumulada[] = round($coberturaTotalAcumulada, 2);
     }
 
-    // Calcular cobertura ideal
+    
     $coberturaIdeal = [];
     $coberturaIdealMes = 0;
     foreach ($meses as $mes) {
-        $coberturaIdealMes += 100 / 12; // Cobertura ideal total debe ser 100% al final del año
+        $coberturaIdealMes += 100 / 12; 
         $coberturaIdeal[] = round($coberturaIdealMes, 2);
     }
 
-    // Obtener los años disponibles
+    
     $anios = CoberturaPrenatal::distinct()->pluck('anio');
 
-    // Pasar datos a la vista
+    
     return view('layouts.graficaCobertura', compact(
         'meses',
         'casosReales',
@@ -115,14 +114,13 @@ class CoberturaPrenatalController extends Controller
 
 
 
-    // Guardar los datos ingresados de un año
     public function guardarDatos(Request $request)
     {
         foreach ($request->embarazos_realizados as $index => $realizados) {
             CoberturaPrenatal::updateOrCreate(
                 [
                     'anio' => $request->anio,
-                    'mes' => $index + 1, // Meses van del 1 al 12
+                    'mes' => $index + 1, 
                 ],
                 [
                     'servicio_salud' => $request->servicio_salud,
@@ -169,7 +167,7 @@ class CoberturaPrenatalController extends Controller
                 'embarazos_esperados' => 0,
             ]);
 
-            return redirect()->route('verGrafica', ['anio' => $request->anio])
+            return redirect()->route('grafica1', ['anio' => $request->anio])
                 ->with('success', 'Nuevo año y mes guardados correctamente.');
         } else {
             return back()->with('error', 'Ya existe un registro para este año y mes.');
@@ -206,7 +204,7 @@ class CoberturaPrenatalController extends Controller
                 ]
             );
 
-            return redirect()->route('verGrafica', ['anio' => $request->anio])
+            return redirect()->route('grafica1', ['anio' => $request->anio])
                 ->with('success', 'Datos del mes guardados correctamente.');
         }
 

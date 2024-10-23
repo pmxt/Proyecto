@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class ControllerSignos_peligro extends Controller
 {
-    // Función para mostrar el formulario de signos y síntomas de peligro
+  
     public function obtener($examenFisicoId)
     {
         $currentStep = 3;
@@ -30,7 +30,7 @@ class ControllerSignos_peligro extends Controller
 
     $examenFisicoId = session('obtener2')['id'] ?? $examenFisicoId;
 
-    // Guardar los signos y síntomas de peligro relacionados con el examen físico
+   
     ModelSignos_peligro::create([
         'examen_fisico_id' => $examenFisicoId,
         'hemorragia_vaginal' => $validated['hemorragia_vaginal'],

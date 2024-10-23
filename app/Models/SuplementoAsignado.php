@@ -13,18 +13,18 @@ class SuplementoAsignado extends Model
     protected $table = 'suplementos_asignados';
 
     protected $fillable = [
-        'examen_fisico_id',  // Relacionado con el examen físico
-        'medicamento_id',    // Medicamento asignado
-        'cantidad_asignada', // Cantidad asignada
+        'examen_fisico_id',  
+        'medicamento_id',    
+        'cantidad_asignada', 
     ];
 
-    // Relación con Examen Físico
+   
     public function examenFisico()
     {
         return $this->belongsTo(ExamenFisico::class, 'examen_fisico_id');
     }
 
-    // Relación con Medicamento
+   
     public function medicamento()
     {
         return $this->belongsTo(Modelmedicamento::class, 'medicamento_id');

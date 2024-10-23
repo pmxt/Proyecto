@@ -19,7 +19,6 @@
             </div>
         @endif
 
-        <!-- Barra de progreso -->
         @if(isset($currentStep) && isset($totalSteps))
             @php
                 $progress = ($currentStep / $totalSteps) * 100;
@@ -46,8 +45,8 @@
                     <tr>
                         <th>No.</th>
                         <th>Descripción</th>
-                        <th>A</th>
-                        <th>B</th>
+                        <th>Sí</th>
+                        <th>No</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,72 +54,72 @@
                         <td>20</td>
                         <td>Diabetes</td>
                         <td>
-                            <input type="checkbox" name="diabetes_a" value="1" 
-                            {{ old('diabetes_a', isset($datos['diabetes_a']) ? $datos['diabetes_a'] : false) ? 'checked' : '' }}>
+                            <input type="radio" name="diabetes" value="si" 
+                            {{ old('diabetes', isset($datos['diabetes']) && $datos['diabetes'] == 'si' ? 'checked' : '') }} required> Sí
                         </td>
                         <td>
-                            <input type="checkbox" name="diabetes_b" value="1" 
-                            {{ old('diabetes_b', isset($datos['diabetes_b']) ? $datos['diabetes_b'] : false) ? 'checked' : '' }}>
+                            <input type="radio" name="diabetes" value="no" 
+                            {{ old('diabetes', isset($datos['diabetes']) && $datos['diabetes'] == 'no' ? 'checked' : '') }} required> No
                         </td>
                     </tr>
                     <tr>
                         <td>21</td>
                         <td>Enfermedad renal</td>
                         <td>
-                            <input type="checkbox" name="renal_a" value="1" 
-                            {{ old('renal_a', isset($datos['renal_a']) ? $datos['renal_a'] : false) ? 'checked' : '' }}>
+                            <input type="radio" name="renal" value="si" 
+                            {{ old('renal', isset($datos['renal']) && $datos['renal'] == 'si' ? 'checked' : '') }} required> Sí
                         </td>
                         <td>
-                            <input type="checkbox" name="renal_b" value="1" 
-                            {{ old('renal_b', isset($datos['renal_b']) ? $datos['renal_b'] : false) ? 'checked' : '' }}>
+                            <input type="radio" name="renal" value="no" 
+                            {{ old('renal', isset($datos['renal']) && $datos['renal'] == 'no' ? 'checked' : '') }} required> No
                         </td>
                     </tr>
                     <tr>
                         <td>22</td>
                         <td>Enfermedad del Corazón</td>
                         <td>
-                            <input type="checkbox" name="corazon_a" value="1" 
-                            {{ old('corazon_a', isset($datos['corazon_a']) ? $datos['corazon_a'] : false) ? 'checked' : '' }}>
+                            <input type="radio" name="corazon" value="si" 
+                            {{ old('corazon', isset($datos['corazon']) && $datos['corazon'] == 'si' ? 'checked' : '') }} required> Sí
                         </td>
                         <td>
-                            <input type="checkbox" name="corazon_b" value="1" 
-                            {{ old('corazon_b', isset($datos['corazon_b']) ? $datos['corazon_b'] : false) ? 'checked' : '' }}>
+                            <input type="radio" name="corazon" value="no" 
+                            {{ old('corazon', isset($datos['corazon']) && $datos['corazon'] == 'no' ? 'checked' : '') }} required> No
                         </td>
                     </tr>
                     <tr>
                         <td>23</td>
                         <td>Hipertensión Arterial</td>
                         <td>
-                            <input type="checkbox" name="hipertension_a" value="1" 
-                            {{ old('hipertension_a', isset($datos['hipertension_a']) ? $datos['hipertension_a'] : false) ? 'checked' : '' }}>
+                            <input type="radio" name="hipertension" value="si" 
+                            {{ old('hipertension', isset($datos['hipertension']) && $datos['hipertension'] == 'si' ? 'checked' : '') }} required> Sí
                         </td>
                         <td>
-                            <input type="checkbox" name="hipertension_b" value="1" 
-                            {{ old('hipertension_b', isset($datos['hipertension_b']) ? $datos['hipertension_b'] : false) ? 'checked' : '' }}>
+                            <input type="radio" name="hipertension" value="no" 
+                            {{ old('hipertension', isset($datos['hipertension']) && $datos['hipertension'] == 'no' ? 'checked' : '') }} required> No
                         </td>
                     </tr>
                     <tr>
                         <td>24</td>
                         <td>Consumo de drogas, incluido alcohol/tabaco</td>
                         <td>
-                            <input type="checkbox" name="drogas_a" value="1" 
-                            {{ old('drogas_a', isset($datos['drogas_a']) ? $datos['drogas_a'] : false) ? 'checked' : '' }}>
+                            <input type="radio" name="drogas" value="si" 
+                            {{ old('drogas', isset($datos['drogas']) && $datos['drogas'] == 'si' ? 'checked' : '') }} required> Sí
                         </td>
                         <td>
-                            <input type="checkbox" name="drogas_b" value="1" 
-                            {{ old('drogas_b', isset($datos['drogas_b']) ? $datos['drogas_b'] : false) ? 'checked' : '' }}>
+                            <input type="radio" name="drogas" value="no" 
+                            {{ old('drogas', isset($datos['drogas']) && $datos['drogas'] == 'no' ? 'checked' : '') }} required> No
                         </td>
                     </tr>
                     <tr>
                         <td>25</td>
                         <td>Cualquier otra enfermedad o afección médica severa</td>
                         <td>
-                            <input type="checkbox" name="otra_a" value="1" 
-                            {{ old('otra_a', isset($datos['otra_a']) ? $datos['otra_a'] : false) ? 'checked' : '' }}>
+                            <input type="radio" name="otra" value="si" 
+                            {{ old('otra', isset($datos['otra']) && $datos['otra'] == 'si' ? 'checked' : '') }} required> Sí
                         </td>
                         <td>
-                            <input type="checkbox" name="otra_b" value="1" 
-                            {{ old('otra_b', isset($datos['otra_b']) ? $datos['otra_b'] : false) ? 'checked' : '' }}>
+                            <input type="radio" name="otra" value="no" 
+                            {{ old('otra', isset($datos['otra']) && $datos['otra'] == 'no' ? 'checked' : '') }} required> No
                         </td>
                     </tr>
                 </tbody>

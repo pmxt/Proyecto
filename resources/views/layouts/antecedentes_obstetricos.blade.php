@@ -35,8 +35,10 @@
             </div>
         @endif
 
-        <form action="{{ route('antecedentes.submit') }}" method="POST">
+        <form action="{{ route('antecedentes.submit', ['embarazo_id' => $embarazo->id]) }}" method="POST">
             @csrf
+            <input type="hidden" name="embarazo_id" value="{{ $embarazo->id }}">
+           
 
             <div class="form-row">
                 <div class="form-group col-md-4">

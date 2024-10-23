@@ -5,6 +5,11 @@
 @section('content_header')
     <h1 class="text-center">Sala situacional del puesto de salud del canton chotacaj totonicapan</h1>
 @stop
+@section('css')
+    <link rel="stylesheet" href="{{ asset('css/estilosU.css') }}">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+@endsection
+
 
 @section('content')
     <div class="row">

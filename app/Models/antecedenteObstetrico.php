@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class antecedenteObstetrico extends Model
 {
-    protected $table = 'antecedentes'; 
-    // Definir los campos que pueden ser asignados masivamente
+    protected $table = 'antecedentes';
+
     protected $fillable = [
-        'paciente_cui', // Relacionar con el paciente por su CUI
+        'embarazo_id', 
         'muerte_fetal',
         'abortos_consecutivos',
         'gestas',
@@ -18,21 +18,19 @@ class antecedenteObstetrico extends Model
         'peso_bebe_4500g',
         'hipertension',
         'cirugias_reproductor',
-
-        'num_embarazos',            // Nuevo campo
-        'num_partos',               // Nuevo campo
-        'num_cesarias',             // Nuevo campo
-        'num_abortos',              // Nuevo campo
-        'num_hijos_nacidos_vivos',  // Nuevo campo
-        'num_hijos_nacidos_muertos',// Nuevo campo
-        'num_hijos_vivos',          // Nuevo campo
-        'num_hijos_fallecidos'     
+        'num_embarazos',
+        'num_partos',
+        'num_cesarias',
+        'num_abortos',
+        'num_hijos_nacidos_vivos',
+        'num_hijos_nacidos_muertos',
+        'num_hijos_vivos',
+        'num_hijos_fallecidos'
     ];
 
-    // Relación con el modelo Paciente
-    public function paciente()
+
+    public function embarazo()
     {
-        return $this->belongsTo(Paciente::class, 'paciente_cui', 'cui');
+        return $this->belongsTo(Embarazo::class);
     }
-   
 }

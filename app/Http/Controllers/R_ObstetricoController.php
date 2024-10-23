@@ -3,23 +3,36 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Paciente; // Asegúrate de incluir el modelo Paciente
+use App\Models\Paciente;
 use App\Models\Encargado;
+use App\Models\Embarazo;
+
+
 
 class R_ObstetricoController extends Controller
 {
+
     public function step1()
     {
-        $datos = session('step1', []); // Recupera los datos de la sesión, o un array vacío si no hay datos
-        $currentStep = 1; // Estás en el paso 1
-    $totalSteps = 5;  // Suponiendo que tienes 3 pasos en total
-        return view('layouts.nuevo_paciente', compact('datos', 'currentStep', 'totalSteps'));
+        $datos = session('step1', []);
+        $currentStep = 1;
+        $totalSteps = 5;
+
+        $pacienteCui = $datos['cui'] ?? null;
+        $embarazo = null;
+
+        if ($pacienteCui) {
+            $embarazo = Embarazo::where('paciente_cui', $pacienteCui)->first();
+        }
+
+        return view('layouts.nuevo_paciente', compact('datos', 'currentStep', 'totalSteps', 'embarazo'));
     }
 
+  
     public function storeStep1(Request $request)
     {
         $validated = $request->validate([
-            'cui' => 'required|numeric|unique:pacientes,cui', // Asegura que el CUI sea único en la tabla pacientes
+            'cui' => 'required|numeric',
             'name' => 'required|string',
             'fecha_nacimiento' => 'required|date',
             'migrante' => 'required|string',
@@ -30,7 +43,8 @@ class R_ObstetricoController extends Controller
             'tiempo' => 'nullable|string',
             'comunidad' => 'nullable|string',
             'telefono' => 'nullable|string',
-
+            'fecha_ultima_regla' => 'required|date',
+            'fecha_probable_parto' => 'required|date',
         ], [
             'cui.required' => 'El CUI es obligatorio.',
             'cui.numeric' => 'El CUI debe ser un número.',
@@ -40,18 +54,19 @@ class R_ObstetricoController extends Controller
             'fecha_nacimiento.required' => 'La fecha de nacimiento es obligatoria.',
             'pueblos.required' => 'Debes seleccionar un pueblo.',
             'pueblos.string' => 'La selección del pueblo es inválida.',
-            'Escolaridad.string' => 'La escolaridad debe ser texto.',
-            'Ocupacion.string' => 'La ocupación debe ser texto.',
+            'fecha_ultima_regla.required' => 'La fecha de la última regla es obligatoria.',
+            'fecha_probable_parto.required' => 'La fecha probable de parto es obligatoria.',
         ]);
 
-        // Calcular la edad
+
         $fechaNacimiento = new \DateTime($validated['fecha_nacimiento']);
         $fechaActual = new \DateTime();
         $edad = $fechaActual->diff($fechaNacimiento)->y;
 
-        // Guardar los datos del paciente en la base de datos
-        $paciente = Paciente::create([
-            'cui' => $validated['cui'],
+
+        $paciente = Paciente::updateOrCreate(
+            ['cui' => $validated['cui']], // Condición para buscar el paciente existente
+            [
             'name' => $validated['name'],
             'fecha_nacimiento' => $validated['fecha_nacimiento'],
             'edad' => $edad,
@@ -63,29 +78,40 @@ class R_ObstetricoController extends Controller
             'tiempo' => $validated['tiempo'],
             'comunidad' => $validated['comunidad'],
             'telefono' => $validated['telefono'],
-
         ]);
 
-        // Guardar en la sesión para el siguiente paso
-        session(['step1' => array_merge($validated, ['edad' => $edad])]);
+        
+        $embarazo = Embarazo::create([
+            'paciente_cui' => $paciente->cui,
+            'fecha_ultima_regla' => $validated['fecha_ultima_regla'],
+            'fecha_probable_parto' => $validated['fecha_probable_parto'],
+        ]);
+
+        session(['step1' => array_merge($validated, ['edad' => $edad, 'embarazo_id' => $embarazo->id])]);
+
+
+
 
         return redirect()->route('registro.paso2');
     }
 
 
+
+   
     public function step2()
     {
-        
-        $datos = session('step2', []); // Recupera los datos de la sesión, o un array vacío si no hay datos
-        $currentStep = 2; // Estás en el paso 1
-    $totalSteps = 5;  // Suponiendo que tienes 3 pasos en total
-        return view('layouts.datos_esposo', compact('datos','currentStep', 'totalSteps')); // Pasa los datos a la vista
+        $datos = session('step2', []);
+        $currentStep = 2;
+        $totalSteps = 5;
+        return view('layouts.datos_esposo', compact('datos', 'currentStep', 'totalSteps'));
     }
 
+    
     public function storeStep2(Request $request)
     {
+        
         $validated = $request->validate([
-            'cui' => 'required|numeric|unique:encargados,cui', // Asegura que el CUI del encargado sea único en la tabla encargados
+            'cui' => 'required|numeric',
             'nombreEsposo' => 'required|string',
             'fecha_nacimiento' => 'required|date',
             'pueblos' => 'required|string',
@@ -100,22 +126,21 @@ class R_ObstetricoController extends Controller
             'fecha_nacimiento.required' => 'La fecha de nacimiento es obligatoria.',
             'pueblos.required' => 'Debes seleccionar un pueblo.',
             'pueblos.string' => 'La selección del pueblo es inválida.',
-            'Escolaridad.string' => 'La escolaridad debe ser texto.',
-            'Ocupacion.string' => 'La ocupación debe ser texto.',
         ]);
 
-        // Calcular la edad del encargado
+
         $fechaNacimiento = new \DateTime($validated['fecha_nacimiento']);
         $fechaActual = new \DateTime();
         $edad = $fechaActual->diff($fechaNacimiento)->y;
 
-        // Obtener el CUI del paciente desde la sesión (guardado en el paso 1)
+
         $pacienteCui = session('step1')['cui'];
 
-        // Guardar los datos del encargado en la base de datos
-        Encargado::create([
-            'cui' => $validated['cui'], // CUI del encargado
-            'paciente_cui' => $pacienteCui, // Relación con el paciente
+
+        Encargado::updateOrCreate(
+            ['cui' => $validated['cui']], // Condición para buscar el paciente existente
+            [
+            'paciente_cui' => $pacienteCui,
             'nombreEsposo' => $validated['nombreEsposo'],
             'fecha_nacimiento' => $validated['fecha_nacimiento'],
             'edad' => $edad,
@@ -125,32 +150,25 @@ class R_ObstetricoController extends Controller
             'estado_civil' => $validated['estado_civil'],
         ]);
 
-        // Limpiar la sesión después de guardar todos los datos
-        /*session()->forget('step1');
-        session()->forget('step2');
-        session()->forget('submit'); */
-        
-        // Guardar en la sesión para el siguiente paso
+
         session(['step2' => array_merge($validated, ['edad' => $edad])]);
         session()->flash('success', 'Paciente y encargado registrados correctamente.');
+
         
-
-        // Redirigir a una página de éxito
-        return redirect()->route('antecedentes.show');
-    }
+        $embarazo_id = session('step1')['embarazo_id'];
+       
 
 
+        return redirect()->route('antecedentes.show', ['embarazo_id' => $embarazo_id]);
+    }  
     public function listarpacientes(Request $request)
     {
-        $search = $request->input('search'); // Recibe el valor de búsqueda
+        $search = $request->input('search');
         $pacientes = Paciente::when($search, function ($query, $search) {
             return $query->where('cui', 'LIKE', "%{$search}%")
                 ->orWhere('name', 'LIKE', "%{$search}%");
         })->paginate(10);
 
-        // Retornar la vista con la variable $pacientes
         return view('layouts.listado_pacientes', compact('pacientes'));
     }
-
-   
 }

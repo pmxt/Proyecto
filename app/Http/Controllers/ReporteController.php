@@ -13,121 +13,171 @@ use App\Models\ExamenFisico;
 use App\Models\ModelSignos_peligro;
 use App\Models\ModeloConsejeria;
 use App\Models\SuplementoAsignado;
-
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
+use Intervention\Image\Facades\Image;
+
+
 use Illuminate\Http\Request;
 
 class ReporteController extends Controller
 {
-    // Muestra la vista para seleccionar el tipo de reporte
+
     public function mostrarVista($pacienteCui)
     {
         $paciente = Paciente::where('cui', $pacienteCui)->firstOrFail();
-        return view('layouts.Reportes', compact('paciente'));
+
+        $embarazos = $paciente->embarazos;
+        return view('layouts.Reportes', compact('paciente', 'embarazos'));
     }
 
-    // Controla la lógica de selección del reporte
+
+
     public function descargarReporte(Request $request)
     {
-        // Obtener el CUI y el tipo de reporte seleccionado
         $pacienteCui = $request->input('paciente_cui');
+        $embarazoId = $request->input('embarazo_id');
         $tipoReporte = $request->input('reporte');
 
-        // Redirige a la ruta correspondiente en función del tipo de reporte seleccionado
         switch ($tipoReporte) {
             case 'obstetrico':
-                return redirect()->route('reporte.obstetrico', $pacienteCui);
+                return redirect()->route('reporte.obstetrico', ['pacienteCui' => $pacienteCui, 'embarazoId' => $embarazoId]);
             case 'prenatal':
-                return redirect()->route('reporte.prenatal', $pacienteCui);
+                return redirect()->route('reporte.prenatal', ['pacienteCui' => $pacienteCui, 'embarazoId' => $embarazoId]);
             case 'seguimiento':
-                return redirect()->route('reporte.seguimiento', $pacienteCui);
+                return redirect()->route('reporte.seguimiento', ['pacienteCui' => $pacienteCui, 'embarazoId' => $embarazoId]);
             case 'examen':
-                return redirect()->route('reporte.examen', $pacienteCui);
+                return redirect()->route('reporte.examen', ['pacienteCui' => $pacienteCui, 'embarazoId' => $embarazoId]);
             default:
                 return back()->withErrors('Reporte no válido seleccionado.');
         }
     }
 
-    // Métodos individuales para generar y descargar cada reporte
-    public function reporteObstetrico($pacienteCui)
+
+    public function reporteObstetrico($pacienteCui, $embarazoId)
     {
         $paciente = Paciente::where('cui', $pacienteCui)->firstOrFail();
 
-        // Buscar el encargado relacionado con el paciente
+
+        $embarazo = ModelsEmbarazo::where('paciente_cui', $pacienteCui)
+            ->where('id', $embarazoId)
+            ->firstOrFail();
+
+
+        $antecedentesObstetricos = $embarazo->antecedenteObstetrico;
+        $historialClinico = $embarazo->historial;
+
+
         $encargado = Encargado::where('paciente_cui', $pacienteCui)->first();
-    
-        // Buscar los antecedentes obstétricos relacionados con el paciente
-        $antecedentesObstetricos = antecedenteObstetrico::where('paciente_cui', $pacienteCui)->first();
-    
-        // Buscar los datos del embarazo relacionados con el paciente
-        $embarazo = ModelsEmbarazo::where('paciente_cui', $pacienteCui)->first();
-    
-        // Buscar los datos del historial clínico relacionados con el paciente
-        $historialClinico = Historial::where('paciente_cui', $pacienteCui)->first();
-    
-        // Generar el PDF usando la vista reportes.obstetrico
-        $pdf = PDF::loadView('reportes.obstetrico', compact('paciente', 'encargado', 'antecedentesObstetricos', 'embarazo', 'historialClinico'));
-    
-        // Descargar el PDF
-        return $pdf->download('reporte_obstetrico.pdf');
+
+
+        $pdf = PDF::loadView('reportes.obstetrico', compact('paciente', 'encargado', 'antecedentesObstetricos', 'embarazo', 'historialClinico'))
+            ->setPaper('legal', 'portrait');
+
+        return $pdf->download('reporte_obstetrico_' . $paciente->cui . '.pdf');
     }
-
-    public function reportePrenatal($pacienteCui)
+    public function reportePrenatal($pacienteCui, $embarazoId)
     {
-           // Buscar el paciente por CUI
-           $paciente = Paciente::where('cui', $pacienteCui)->firstOrFail();
 
-           // Buscar la primera consulta prenatal relacionada con el paciente
-           $consulta = consulta1::where('paciente_cui', $pacienteCui)->first();
-   
-           // Buscar otros datos del embarazo si son necesarios
-           $embarazo = ModelsEmbarazo::where('paciente_cui', $pacienteCui)->first();
-   
-           // Generar el PDF usando la vista reportes.prenatal
-           $pdf = PDF::loadView('reportes.prenatal', compact('paciente', 'consulta', 'embarazo'));
-   
-           // Descargar el PDF
-           return $pdf->download('reporte_prenatal.pdf');
-    }
-
-    public function reporteSeguimiento($pacienteCui)
-    {
-         // Buscar el paciente por CUI
-         $paciente = Paciente::where('cui', $pacienteCui)->firstOrFail();
-
-         // Buscar los controles de seguimiento relacionados con el paciente
-         $controles = ModeloEmbarazo_Actual::where('paciente_cui', $pacienteCui)->get();
- 
-         // Generar el PDF usando la vista reportes.seguimiento
-         $pdf = PDF::loadView('reportes.seguimiento', compact('paciente', 'controles'));
- 
-         // Descargar el PDF
-         return $pdf->download('reporte_seguimiento.pdf');
-    }
-
-    public function reporteExamen($pacienteCui)
-    {
         $paciente = Paciente::where('cui', $pacienteCui)->firstOrFail();
 
-        // Obtener la última consulta del paciente
-        $consulta = consulta1::where('paciente_cui', $pacienteCui)->latest()->first();
+        $embarazo = ModelsEmbarazo::where('paciente_cui', $pacienteCui)
+            ->where('id', $embarazoId)
+            ->firstOrFail();
 
-        // Obtener los datos del examen físico relacionados con la consulta
+        $consulta = consulta1::where('paciente_cui', $pacienteCui)
+            ->where('embarazo_id', $embarazoId)
+            ->first();
+
+        $antecedentesObstetricos = $embarazo->antecedenteObstetrico;
+
+
+        $historialClinico = $embarazo->historial;
+
+        $encargado = Encargado::where('paciente_cui', $pacienteCui)->first();
+
         $examenFisico = ExamenFisico::where('consulta_prenatal_id', $consulta->id)->first();
 
-        // Obtener los signos y síntomas de peligro relacionados con el examen físico
-        $signosPeligro = ModelSignos_peligro::where('examen_fisico_id', $examenFisico->id)->first();
+        $signos = $examenFisico ? ModelSignos_peligro::where('examen_fisico_id', $examenFisico->id)->first() : null;
 
-        // Obtener los datos de consejería relacionados con el examen físico
-        $consejeria = ModeloConsejeria::where('examen_fisico_id', $examenFisico->id)->first();
 
-        // Obtener los medicamentos asignados
-        $medicamentosAsignados = SuplementoAsignado::where('examen_fisico_id', $examenFisico->id)->get();
+        $pdf = PDF::loadView('reportes.prenatal', compact('paciente', 'embarazo', 'consulta', 'antecedentesObstetricos', 'historialClinico', 'encargado', 'signos'))
+            ->setPaper('legal', 'portrait');
 
-        // Generar el PDF usando la vista reportes.examen
-        $pdf = PDF::loadView('reportes.examen', compact('paciente', 'consulta', 'examenFisico', 'signosPeligro', 'consejeria', 'medicamentosAsignados'));
 
-        // Descargar el PDF
-        return $pdf->download('reporte_examen.pdf');
+        return $pdf->download('reporte_prenatal_' . $paciente->cui . '.pdf');
+    }
+
+
+
+
+
+    public function reporteSeguimiento($pacienteCui, $embarazoId)
+    {
+
+        $paciente = Paciente::where('cui', $pacienteCui)->firstOrFail();
+
+
+        $embarazo = ModelsEmbarazo::where('paciente_cui', $pacienteCui)
+            ->where('id', $embarazoId)
+            ->firstOrFail();
+
+
+        $antecedentesObstetricos = $embarazo->antecedenteObstetrico;
+
+
+        $historialClinico = $embarazo->historial;
+
+
+        $encargado = Encargado::where('paciente_cui', $pacienteCui)->first();
+
+
+        $controles = ModeloEmbarazo_Actual::where('embarazo_id', $embarazoId)->get();
+
+
+        $pdf = PDF::loadView('reportes.seguimiento', compact('paciente', 'embarazo', 'controles', 'antecedentesObstetricos', 'historialClinico', 'encargado'))
+            ->setPaper('legal', 'portrait');
+
+
+        return $pdf->download('reporte_seguimiento_' . $paciente->cui . '.pdf');
+    }
+
+
+    public function reporteExamen($pacienteCui, $embarazoId)
+    {
+        $paciente = Paciente::where('cui', $pacienteCui)->firstOrFail();
+
+
+
+
+        $embarazo = ModelsEmbarazo::where('paciente_cui', $pacienteCui)
+            ->where('id', $embarazoId)
+            ->firstOrFail();
+        $consulta = consulta1::where('paciente_cui', $pacienteCui)
+            ->where('embarazo_id', $embarazoId)
+            ->first();
+
+        $antecedentesObstetricos = $embarazo->antecedenteObstetrico;
+
+
+        $historialClinico = $embarazo->historial;
+
+
+        $encargado = Encargado::where('paciente_cui', $pacienteCui)->first();
+
+
+        $controles = ModeloEmbarazo_Actual::where('embarazo_id', $embarazoId)->get();
+
+        $examenFisico = ExamenFisico::where('consulta_prenatal_id', $consulta->id)->first();
+        $signosPeligro = $examenFisico ? ModelSignos_peligro::where('examen_fisico_id', $examenFisico->id)->first() : null;
+        $consejeria = $examenFisico ? ModeloConsejeria::where('examen_fisico_id', $examenFisico->id)->first() : null;
+      
+        $medicamentosAsignados = $examenFisico ? SuplementoAsignado::where('examen_fisico_id', $examenFisico->id)->get() : collect();
+
+
+        $pdf = PDF::loadView('Reportes.examen', compact('paciente', 'signosPeligro', 'medicamentosAsignados', 'consejeria', 'embarazo', 'examenFisico', 'controles', 'consulta', 'antecedentesObstetricos', 'historialClinico', 'encargado'))
+            ->setPaper('legal', 'portrait');
+
+
+        return $pdf->download('reporte_seguimiento_' . $paciente->cui . '.pdf');
     }
 }

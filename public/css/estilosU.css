@@ -2,12 +2,30 @@
 
 /* Estilo para el título */
 h1 {
-    color: #9dceff;
+    color: #000000;
     text-align: center;
     margin-top: 20px;
     font-family: 'Arial', sans-serif;
 }
+.small-box .inner h3 {
+    font-size: 1.5rem; /* Reduce el tamaño de la fuente si es necesario */
+    white-space: nowrap; /* Evita el salto de línea */
+    overflow: hidden; /* Oculta el contenido que se desborde */
+    text-overflow: ellipsis; /* Muestra "..." si el texto es muy largo */
+}
+.small-box {
+    min-height: 150px; /* Ajusta la altura mínima de los cuadros */
+}
 
+
+.small-box .inner p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+ 
 h2 {
     color: #000000;
     text-align: center;
@@ -70,6 +88,7 @@ h2 {
 body {
     background-color: #f5f5f5;
     font-family: 'Roboto', sans-serif;
+    
 }
 
 .container {
@@ -77,4 +96,5 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    
 }

@@ -10,7 +10,7 @@ class consulta1 extends Model
     use HasFactory;
     protected $table = 'consultas_prenatales';
 
-    // Campos que se permiten para la asignación masiva
+
     protected $fillable = [
         'paciente_cui',
         'fecha_consulta',
@@ -19,9 +19,19 @@ class consulta1 extends Model
         'nombre_servicio',
         'motivo_consulta',
         'tipo_consulta',
+        'embarazo_id',
+
+
+        
+    ];
+    protected $casts = [
+        'fecha_consulta' => 'date',
     ];
 
-    // Relación con el modelo Paciente
+    public function embarazo()
+{
+    return $this->belongsTo(Embarazo::class, 'embarazo_id', 'id');
+}
     public function paciente()
     {
         return $this->belongsTo(Paciente::class, 'paciente_cui', 'cui');

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('antecedentes', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('paciente_cui'); // CUI del paciente
-            $table->foreign('paciente_cui')->references('cui')->on('pacientes')->onDelete('cascade'); // Relación con la tabla 'pacientes'
+            $table->unsignedBigInteger('embarazo_id');
+            $table->foreign('embarazo_id')->references('id')->on('embarazo')->onDelete('cascade');  // Relación con la tabla 'embarazo'
             $table->enum('muerte_fetal', ['si', 'no']);
             $table->enum('abortos_consecutivos', ['si', 'no']);
             $table->enum('gestas', ['si', 'no']);
@@ -23,22 +23,18 @@ return new class extends Migration
             $table->enum('hipertension', ['si', 'no']);
             $table->enum('cirugias_reproductor', ['si', 'no']);
 
-             // Nuevos campos
-             $table->integer('num_embarazos')->default(0);
-             $table->integer('num_partos')->default(0);
-             $table->integer('num_cesarias')->default(0);
-             $table->integer('num_abortos')->default(0);
-             $table->integer('num_hijos_nacidos_vivos')->default(0);
-             $table->integer('num_hijos_nacidos_muertos')->default(0);
-             $table->integer('num_hijos_vivos')->default(0);
-             $table->integer('num_hijos_fallecidos')->default(0);
+            $table->integer('num_embarazos')->default(0);
+            $table->integer('num_partos')->default(0);
+            $table->integer('num_cesarias')->default(0);
+            $table->integer('num_abortos')->default(0);
+            $table->integer('num_hijos_nacidos_vivos')->default(0);
+            $table->integer('num_hijos_nacidos_muertos')->default(0);
+            $table->integer('num_hijos_vivos')->default(0);
+            $table->integer('num_hijos_fallecidos')->default(0);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('antecedentes');

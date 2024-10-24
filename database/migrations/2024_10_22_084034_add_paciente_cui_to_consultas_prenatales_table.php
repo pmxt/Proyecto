@@ -13,7 +13,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('consultas_prenatales', function (Blueprint $table) {
-            $table->string('paciente_cui')->nullable(); // Asegúrate de usar el tipo de dato adecuado
+            $table->string('paciente_cui')->nullable(); 
         });
     }
     

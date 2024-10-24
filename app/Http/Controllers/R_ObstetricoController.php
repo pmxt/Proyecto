@@ -103,7 +103,7 @@ class R_ObstetricoController extends Controller
         $datos = session('step2', []);
         $currentStep = 2;
         $totalSteps = 5;
-        return view('layouts.datos_esposo', compact('datos', 'currentStep', 'totalSteps'));
+        return view('layouts.Datos_Esposo', compact('datos', 'currentStep', 'totalSteps'));
     }
 
     

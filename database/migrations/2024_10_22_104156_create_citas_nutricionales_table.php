@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('citas_nutricionales', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('consulta_nutricional_id')->constrained('nuevoE')->onDelete('cascade'); // Relacionada con la tabla consultas
-            $table->date('fecha_cita'); // Fecha de la cita
-            $table->string('motivo')->nullable(); // Motivo de la cita
-            $table->enum('estado', ['pendiente', 'realizada'])->default('pendiente'); // Estado de la cita
+            $table->foreignId('consulta_nutricional_id')->constrained('nuevoE')->onDelete('cascade'); 
+            $table->date('fecha_cita');
+            $table->string('motivo')->nullable(); 
+            $table->enum('estado', ['pendiente', 'realizada'])->default('pendiente'); 
            
           
             $table->timestamps();

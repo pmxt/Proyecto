@@ -6,7 +6,7 @@
 @endsection
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/estilosU.css') }}">
-    @vite('resources/css/app.css')
+    
 @endsection
 
 @section('content')

@@ -35,7 +35,7 @@
             <a href="{{ route('home') }}" class="btn btn-primary">Volver</a>
         </div>
     
-        <div class="card shadow-sm p-4 mt-4">
+        
             <h2 class="text-center">Cobertura Acumulada del Primer Control Prenatal</h2>
            
             <div class="mb-3 d-flex flex-column flex-md-row justify-content-center">
@@ -54,7 +54,7 @@
                 </select>
             </form>
 
-            <!-- Sección de datos generales -->
+         
             <div class="row mb-4">
                 <div class="col-md-6">
                     <label for="servicio_salud" class="form-label">Servicio de Salud:</label>
@@ -84,7 +84,7 @@
 
             <!-- Gráfica de cobertura acumulada -->
             <div class="mb-4">
-                <canvas id="graficoCobertura"></canvas>
+                <canvas id="graficoCobertura" width="400" height="300"></canvas>
             </div>
 
             <!-- Tabla de cobertura acumulada con tamaño reducido -->
@@ -140,7 +140,7 @@
                     </tbody>
                 </table>
             </div>
-        </div>
+        
     </div>
 
     <!-- Chart.js -->

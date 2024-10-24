@@ -64,7 +64,6 @@ class CalendarioController extends Controller
            
             $user = Auth::user(); 
     
-        
             $user->notify(new CitasNotification($listaCitas));
         }
         $citasFormatted = $citasHoy->map(function ($cita) {
@@ -94,5 +93,4 @@ class CalendarioController extends Controller
 
         return "Notificación de prueba enviada!";
     }
-
 }

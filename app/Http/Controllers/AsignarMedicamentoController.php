@@ -97,11 +97,11 @@ class AsignarMedicamentoController extends Controller
 
 
         if ($semanasEmbarazo <= 12) {
-            $proximaFechaCita = now()->addWeeks(14);
+            $proximaFechaCita = now()->addWeeks();
         } elseif ($semanasEmbarazo <= 26) {
-            $proximaFechaCita = now()->addWeeks(6);
+            $proximaFechaCita = now()->addWeeks();
         } elseif ($semanasEmbarazo <= 32) {
-            $proximaFechaCita = now()->addWeeks(4);
+            $proximaFechaCita = now()->addWeeks();
         } else {
             $proximaFechaCita = null;
         }

@@ -16,7 +16,7 @@ class embarazo extends Controller
         $totalSteps = 5; 
 
        
-        return view('layouts.embarazo', compact('datos', 'currentStep', 'totalSteps'));
+        return view('layouts.Embarazo', compact('datos', 'currentStep', 'totalSteps'));
     }
     public function guardarFormulario(Request $request)
     {

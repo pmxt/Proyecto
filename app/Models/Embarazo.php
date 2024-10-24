@@ -27,7 +27,7 @@ class Embarazo extends Model
     }
     public function antecedenteObstetrico()
     {
-        return $this->hasOne(AntecedenteObstetrico::class); // 1 a 1 
+        return $this->hasOne(antecedenteObstetrico::class); // 1 a 1 
     }
     public function consultasPrenatales()
 {

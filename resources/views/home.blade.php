@@ -11,9 +11,10 @@
 @endsection
 
 
+
 @section('content')
     <div class="row">
-        <!-- Panel 1 -->
+   
         <div class="col-lg-3 col-6">
             <div class="small-box bg-info">
                 <div class="inner">
@@ -27,7 +28,7 @@
             </div>
         </div>
 
-        <!-- Panel 2 -->
+      
         <div class="col-lg-3 col-6">
             <div class="small-box bg-success">
                 <div class="inner">
@@ -41,7 +42,7 @@
             </div>
         </div>
 
-        <!-- Panel 3 -->
+        
         <div class="col-lg-3 col-6">
             <div class="small-box bg-warning">
                 <div class="inner">
@@ -55,7 +56,6 @@
             </div>
         </div>
 
-        <!-- Panel 4 -->
         <div class="col-lg-3 col-6">
             <div class="small-box bg-danger">
                 <div class="inner">

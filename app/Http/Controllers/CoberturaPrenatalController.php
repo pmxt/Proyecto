@@ -92,7 +92,7 @@ class CoberturaPrenatalController extends Controller
     $anios = CoberturaPrenatal::distinct()->pluck('anio');
 
     
-    return view('layouts.graficaCobertura', compact(
+    return view('layouts.graficacobertura', compact(
         'meses',
         'casosReales',
         'embarazosEsperadosPorMes',
@@ -137,28 +137,28 @@ class CoberturaPrenatalController extends Controller
     }
 
 
-    // Mostrar formulario para agregar un nuevo año
+  
     public function mostrarFormularioAnio()
     {
         return view('layouts.ingresarAnio');
     }
 
-    // Guardar los datos de un nuevo año
+    
     public function guardarAnio(Request $request)
     {
-        // Asignar el valor de enero (1) si el campo 'mes' no está presente en la solicitud
-        $mes = $request->mes ?? 'Enero';  // Si no se envía un mes, se asigna enero (1)
+      
+        $mes = $request->mes ?? 'Enero';  
 
-        // Verificar si ya existe un registro para el año y mes
+      
         $registroAnioMes = CoberturaPrenatal::where('anio', $request->anio)
             ->where('mes', $mes)
             ->first();
 
         if (!$registroAnioMes) {
-            // Crear un nuevo registro para el año y mes (enero si no se especifica otro mes)
+            
             CoberturaPrenatal::create([
                 'anio' => $request->anio,
-                'mes' => $mes, // Aquí se asegura que 'mes' tenga el valor de enero (1) si no se especifica
+                'mes' => $mes, 
                 'servicio_salud' => $request->servicio_salud,
                 'distrito_salud' => $request->distrito_salud,
                 'area_salud' => $request->area_salud,
@@ -188,19 +188,19 @@ class CoberturaPrenatalController extends Controller
         $anioData = CoberturaPrenatal::where('anio', $request->anio)->first();
 
         if ($anioData) {
-            // Crear o actualizar el registro para el mes específico, manteniendo los datos estáticos
+           
             CoberturaPrenatal::updateOrCreate(
                 [
                     'anio' => $request->anio,
-                    'mes' => $request->mes, // El mes que estás actualizando o creando
+                    'mes' => $request->mes, 
                 ],
                 [
                     'embarazos_esperados' => $request->embarazos_esperados,
                     'embarazos_realizados' => $request->embarazos_realizados,
-                    'servicio_salud' => $anioData->servicio_salud, // Recuperar datos estáticos del año
+                    'servicio_salud' => $anioData->servicio_salud, 
                     'distrito_salud' => $anioData->distrito_salud,
                     'area_salud' => $anioData->area_salud,
-                    'poblacion_meta' => $anioData->poblacion_meta // Mantener la población meta del año existente
+                    'poblacion_meta' => $anioData->poblacion_meta 
                 ]
             );
 

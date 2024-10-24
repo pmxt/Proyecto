@@ -142,7 +142,9 @@ Route::middleware(['auth'])->group(function () {
     //-------------------------------------------------------------------------------------------------------------------------------------------//
 
     //------------------------------ rutas para el calendario de citas ---------
-    Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario.index')->middleware('auth');
+  
+
+  Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario.index')->middleware('auth');
     Route::get('/calendario/citas', [CalendarioController::class, 'getCitas'])->name('calendario.citas');
     Route::get('/verificar-citas', [CalendarioController::class, 'verificarCitasDiarias']);
 

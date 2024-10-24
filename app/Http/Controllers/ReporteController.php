@@ -70,7 +70,7 @@ class ReporteController extends Controller
         $encargado = Encargado::where('paciente_cui', $pacienteCui)->first();
 
 
-        $pdf = PDF::loadView('reportes.obstetrico', compact('paciente', 'encargado', 'antecedentesObstetricos', 'embarazo', 'historialClinico'))
+        $pdf = PDF::loadView('Reportes.obstetrico', compact('paciente', 'encargado', 'antecedentesObstetricos', 'embarazo', 'historialClinico'))
             ->setPaper('legal', 'portrait');
 
         return $pdf->download('reporte_obstetrico_' . $paciente->cui . '.pdf');
@@ -100,7 +100,7 @@ class ReporteController extends Controller
         $signos = $examenFisico ? ModelSignos_peligro::where('examen_fisico_id', $examenFisico->id)->first() : null;
 
 
-        $pdf = PDF::loadView('reportes.prenatal', compact('paciente', 'embarazo', 'consulta', 'antecedentesObstetricos', 'historialClinico', 'encargado', 'signos'))
+        $pdf = PDF::loadView('Reportes.prenatal', compact('paciente', 'embarazo', 'consulta', 'antecedentesObstetricos', 'historialClinico', 'encargado', 'signos'))
             ->setPaper('legal', 'portrait');
 
 
@@ -134,7 +134,7 @@ class ReporteController extends Controller
         $controles = ModeloEmbarazo_Actual::where('embarazo_id', $embarazoId)->get();
 
 
-        $pdf = PDF::loadView('reportes.seguimiento', compact('paciente', 'embarazo', 'controles', 'antecedentesObstetricos', 'historialClinico', 'encargado'))
+        $pdf = PDF::loadView('Reportes.seguimiento', compact('paciente', 'embarazo', 'controles', 'antecedentesObstetricos', 'historialClinico', 'encargado'))
             ->setPaper('legal', 'portrait');
 
 

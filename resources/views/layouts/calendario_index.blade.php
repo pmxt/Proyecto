@@ -20,7 +20,7 @@
     var calendarEl = document.getElementById('calendar');
 
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth', // Vista inicial: calendario en formato mensual
+        initialView: 'dayGridMonth',
         locale: 'es', // Localización en español
         events: '{{ route('calendario.citas') }}', // Ruta que devuelve el JSON de las citas
 

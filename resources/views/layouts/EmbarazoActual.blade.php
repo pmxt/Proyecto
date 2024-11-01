@@ -67,7 +67,7 @@
                 </div>
             </div>
 
-            <!-- Añadimos los campos para registrar las fechas de control mensual -->
+           
             <h4>Controles Nutricionales</h4>
             <table class="table table-bordered">
                 <thead>

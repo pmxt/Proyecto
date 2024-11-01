@@ -42,7 +42,7 @@
                 <a href="{{ route('ingresarMes', ['anio' => $anioSeleccionado]) }}" class="btn btn-secondary mr-md-2 mb-2 mb-md-0">Ingresar Datos de Mes</a>
                 <a href="{{ route('ingresarAnio') }}" class="btn btn-secondary">Agregar Nuevo Año</a>
             </div>
-            <!-- Selección de Año -->
+          
             <form method="GET" action="{{ route('grafica1') }}">
                 <label for="anio">Seleccionar Año:</label>
                 <select name="anio" id="anio" onchange="this.form.submit()">
@@ -82,12 +82,12 @@
                 </div>
             </div>
 
-            <!-- Gráfica de cobertura acumulada -->
+         
             <div class="mb-4">
                 <canvas id="graficoCobertura" width="400" height="300"></canvas>
             </div>
 
-            <!-- Tabla de cobertura acumulada con tamaño reducido -->
+            
             <div class="table-responsive">
                 <table class="table table-sm table-bordered">
                     <thead>

@@ -7,7 +7,7 @@
 @section('content')
     <div class="wrapper">
         <div class="logo text-center">
-            <img src="{{ asset('imagenes/302464652_537376068387806_7427466127821357187_n.png') }}" alt="Logo" class="img-fluid" style="max-width: 150px;">
+            <img src="{{ asset('imagenes/MPS.jpg') }}" alt="Logo" class="img-fluid" style="max-width: 150px;">
         </div>
 
         <div class="text-center mt-4 name">

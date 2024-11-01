@@ -67,4 +67,14 @@ class GraficaController extends Controller
             'embarazosEsperadosPorMes'
         ));
     }
+    public function mostrarGrafica2(){
+
+    }
+    public function mostrarGrafica3(){
+
+        return view('graficos.grafico3'); 
+    }
+    public function mostrarGrafica4(){
+        
+    }
 }

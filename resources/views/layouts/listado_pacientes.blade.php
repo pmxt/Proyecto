@@ -6,7 +6,6 @@
 @endsection
 @section('css')
     <link rel="stylesheet" href="{{ asset('css/estilosU.css') }}">
-    
 @endsection
 
 @section('content')
@@ -19,7 +18,6 @@
             </div>
         @endif
 
-        <!-- Formulario de búsqueda -->
         <form action="{{ route('pacientes.listar') }}" method="GET" class="mb-4">
             <div class="input-group">
                 <input type="text" name="search" class="form-control" placeholder="Buscar por CUI o nombre"
@@ -30,7 +28,7 @@
             </div>
         </form>
 
-        <!-- Tabla responsiva -->
+       
         <div class="table-responsive">
             <table class="table table-bordered table-hover">
                 <thead class="thead-light">
@@ -50,15 +48,14 @@
                             <td>{{ \Carbon\Carbon::parse($paciente->fecha_nacimiento)->age }} años</td>
                             <td>{{ $paciente->telefono }}</td>
                             <td>
-                                <!-- Botón con solo el ícono de WhatsApp -->
+
                                 <a href="https://api.whatsapp.com/send?phone={{ $paciente->telefono }}&text=Hola%20{{ urlencode($paciente->name) }}%2C%20queremos%20confirmar%20tu%20próxima%20cita%20de%20control%20prenatal."
                                     target="_blank" class="btn btn-success btn-sm">
                                     <i class="fab fa-whatsapp"></i>
                                 </a>
-                                <!-- Botón de reportes solo con ícono -->
                                 <a href="{{ route('mostrarVistaReporte', ['paciente' => $paciente->cui]) }}"
                                     class="btn btn-secondary btn-sm" title="Generar Reporte">
-                                    <i class="fa fa-file-pdf"></i> <!-- Ícono de Font Awesome para PDF -->
+                                    <i class="fa fa-file-pdf"></i>
                                 </a>
                             </td>
                         </tr>
@@ -67,7 +64,7 @@
             </table>
         </div>
 
-        <!-- Paginación -->
+      
         <div class="d-flex justify-content-center">
             {{ $pacientes->links() }}
         </div>

@@ -17,16 +17,17 @@
                 </ul>
             </div>
         @endif
-        @if (session('success'))
+       
+    
+        @if (session('success') && session('consultaId'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
-    
-        <!-- Botón para descargar el PDF -->
         <a href="{{ route('reporte.descargar', ['consultaId' => session('consultaId')]) }}" class="btn btn-secondary">
             <i class="fa fa-file-pdf-o"></i> Descargar PDF de la Cita
         </a>
     @endif
+
     
 
         <form

@@ -18,7 +18,7 @@
         <div class="col-lg-3 col-6">
             <div class="small-box bg-info">
                 <div class="inner">
-                    <h3>Hierro</h3>
+                    <h3>Control prenatal</h3>
                     <p>Cobertura acumulada</p>
                 </div>
                 <div class="icon">
@@ -32,13 +32,13 @@
         <div class="col-lg-3 col-6">
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3>Acido folico</h3>
-                    <p>Cobertura acumulada</p>
+                    <h3>Embarazos Esperados</h3>
+                    <p>Cobertura Anual acumulada</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-chart-pie"></i>
                 </div>
-                <a href="{{ route('grafica2') }}" class="small-box-footer">Más información <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('graficaPastel') }}" class="small-box-footer">Más información <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -46,26 +46,26 @@
         <div class="col-lg-3 col-6">
             <div class="small-box bg-warning">
                 <div class="inner">
-                    <h3>Comadronas</h3>
+                    <h3>Partos realizados por comadronas </h3>
                     <p>Porcentaje</p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-chart-bar"></i>
                 </div>
-                <a href="{{ route('grafica3') }}" class="small-box-footer">Más información <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('comadronas.grafica') }}" class="small-box-footer">Más información <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
         <div class="col-lg-3 col-6">
             <div class="small-box bg-danger">
                 <div class="inner">
-                    <h3>Medicos</h3>
+                    <h3>Partos realizados por Medicos</h3>
                     <p>Porcentaje </p>
                 </div>
                 <div class="icon">
                     <i class="fas fa-chart-area"></i>
                 </div>
-                <a href="{{ route('grafica4') }}" class="small-box-footer">Más información <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('medicos.grafica') }}" class="small-box-footer">Más información <i class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
     </div>

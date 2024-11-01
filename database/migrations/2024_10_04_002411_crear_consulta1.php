@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('nombre_servicio');
             $table->string('motivo_consulta');
             $table->string('tipo_consulta');
+            $table->boolean('realizada')->default(false);
             $table->timestamps();
         });
     }

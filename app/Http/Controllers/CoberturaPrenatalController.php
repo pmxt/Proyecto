@@ -110,10 +110,6 @@ class CoberturaPrenatalController extends Controller
     ));
 }
 
-
-
-
-
     public function guardarDatos(Request $request)
     {
         foreach ($request->embarazos_realizados as $index => $realizados) {
@@ -210,4 +206,33 @@ class CoberturaPrenatalController extends Controller
 
         return back()->with('error', 'No se encontraron datos para el año seleccionado.');
     }
+
+    public function verGraficaPastel(Request $request)
+    {
+        $anioSeleccionado = $request->input('anio', date('Y'));
+    
+        
+        $coberturaDatos = $this->verGrafica($request)->getData();
+    
+      
+        $embarazosRealizadosTotal = array_sum($coberturaDatos['casosReales']);
+    
+        
+        $poblacionMeta = $coberturaDatos['poblacionMeta'];
+    
+        
+        $embarazosFaltantes = max(0, $poblacionMeta - $embarazosRealizadosTotal);
+    
+        $anios = $coberturaDatos['anios'];
+    
+        return view('graficos.graficaPastel', compact(
+            'anioSeleccionado',
+            'anios',
+            'embarazosRealizadosTotal',
+            'embarazosFaltantes',
+            'poblacionMeta'
+        ));
+    }
+    
+
 }

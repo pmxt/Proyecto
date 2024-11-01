@@ -9,7 +9,7 @@
     <div class="card shadow-sm p-4 mt-4">
         <h2 class="text-center">Ingresar un Nuevo Año para Cobertura Prenatal</h2>
 
-        <!-- Formulario para ingresar un nuevo año -->
+       
         <form method="POST" action="{{ route('guardarAnio') }}">
             @csrf
             <div class="row mb-3">

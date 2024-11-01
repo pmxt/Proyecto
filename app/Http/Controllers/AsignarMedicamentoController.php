@@ -90,27 +90,15 @@ class AsignarMedicamentoController extends Controller
 
     private function agendarNuevaCita($examenFisicoId)
     {
-
+       
         $examenFisico = ExamenFisico::with('consultaPrenatal.paciente')->findOrFail($examenFisicoId);
         $consultaPrenatal = $examenFisico->consultaPrenatal;
-        $semanasEmbarazo = $examenFisico->semanas_embarazo;
-
-
-        if ($semanasEmbarazo <= 12) {
-            $proximaFechaCita = now()->addWeeks();
-        } elseif ($semanasEmbarazo <= 26) {
-            $proximaFechaCita = now()->addWeeks();
-        } elseif ($semanasEmbarazo <= 32) {
-            $proximaFechaCita = now()->addWeeks();
-        } else {
-            $proximaFechaCita = null;
-        }
-
-
-        if (!$proximaFechaCita) {
-            return false;
-        }
-
+    
+        
+        $fechaControlActual = $consultaPrenatal->fecha_consulta; 
+        $proximaFechaCita = \Carbon\Carbon::parse($fechaControlActual)->addMonth(); 
+    
+      
         $consulta = consulta1::create([
             'paciente_cui' => $consultaPrenatal->paciente_cui,
             'fecha_consulta' => $proximaFechaCita,
@@ -121,12 +109,13 @@ class AsignarMedicamentoController extends Controller
             'tipo_consulta' => 'Seguimiento',
             'embarazo_id' => $consultaPrenatal->embarazo_id,
         ]);
-
-
+    
+        
         session()->put('consultaId', $consulta->id);
-
+    
         return true;
     }
+    
 
 
     public function descargarReporteCita($consultaId)

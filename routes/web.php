@@ -24,8 +24,8 @@ use App\Notifications\CitasNotification;
 use Intervention\Image\Facades\Image;
 use App\Http\Controllers\TestImageController;
 use App\Http\Controllers\CitaNutricionalController;
-
-
+use App\Http\Controllers\ComadronasController;
+use App\Http\Controllers\MedicosController;
 use App\Models\User;
 use Illuminate\Routing\RouteGroup;
 
@@ -46,9 +46,11 @@ Auth::routes();
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/Usuarios', [UserController::class, 'listarUsuarios'])->name('listaUsuarios');
+    Route::get('/register', [App\Http\Controllers\Auth\RegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('/register', [App\Http\Controllers\Auth\RegisterController::class, 'register']);
 });
 
-    
+
 
 
 Route::middleware('auth')->get('/perfil', [UserController::class, 'perfil'])->name('perfil');
@@ -57,12 +59,11 @@ Route::middleware('auth')->post('/perfil/actualizar', [UserController::class, 'a
 Route::middleware(['auth'])->group(function () {
 
     // ---------rutas para funcionalidad  privadas para el admin  ------------------------
-  
-   
+
+
     Route::get('/users/edit/{id}', [UserController::class, 'editar'])->name('users.edit');
     Route::put('/users/update/{id}', [UserController::class, 'actualizar'])->name('users.update');
     Route::delete('/users/delete/{id}', [UserController::class, 'eliminar'])->name('users.destroy');
-
     Route::put('/users/{id}/asignar-rol', [UserController::class, 'asignarRol'])->name('asignar.rol');
 
 
@@ -72,8 +73,8 @@ Route::middleware(['auth'])->group(function () {
     Route::POST('/users/updateP', [UserController::class, 'actualizarperfil'])->name('users.updateP');
 
     Route::POST('/users/update-password', [UserController::class, 'actualizarPassword'])->name('users.updatePassword');
-   
- 
+
+
 
     //---------------------------------------visualizacion general del paciente ----------------------------------------------------------------//
 
@@ -97,7 +98,7 @@ Route::middleware(['auth'])->group(function () {
     // Ruta para mostrar el formulario de antecedentes, pasando embarazo_id como parámetro
     Route::get('/paciente/antecedentes/{embarazo_id}', [AntecedentesObstetricosController::class, 'step'])->name('antecedentes.show');
     Route::post('/paciente/antecedentes/{embarazo_id}', [AntecedentesObstetricosController::class, 'submit'])->name('antecedentes.submit');
-    
+
 
     // guarda el historial del embarazo de la paciente  anexo>ficha1----------
     Route::get('/embarazo', [embarazo::class, 'mostrarFormulario'])->name('embarazo.mostrar');
@@ -141,12 +142,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/medicamentos/asignar/{examenFisicoId}', [AsignarMedicamentoController::class, 'guardar'])->name('medicamentos.asignar.guardar');
     //-------------------------------------------------------------------------------------------------------------------------------------------//
 
-    //------------------------------ rutas para el calendario de citas ---------
-  
-
-  Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario.index')->middleware('auth');
-    Route::get('/calendario/citas', [CalendarioController::class, 'getCitas'])->name('calendario.citas');
-    Route::get('/verificar-citas', [CalendarioController::class, 'verificarCitasDiarias']);
 
 
 
@@ -157,19 +152,31 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/medicamentos/{id}', [Controllermedicamentos::class, 'update'])->name('medicamentos.update');
     Route::delete('/medicamentos/{id}', [Controllermedicamentos::class, 'destroy'])->name('medicamentos.destroy');
 
+    //------------------------------ rutas para el calendario de citas ---------
+
+
+    Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendario.index')->middleware('auth');
+    Route::get('/calendario/citas', [CalendarioController::class, 'getCitas'])->name('calendario.citas');
+    Route::get('/verificar-citas', [CalendarioController::class, 'verificarCitasDiarias']);
+    Route::put('/citas/{id}/marcar-realizada', [CalendarioController::class, 'marcarComoRealizada'])->name('citas.marcarRealizada');
+
+
+
 
 
     // en proceso de creacion de graficos para el dashbord principal --------
-    Route::get('/grafica/cobertura', [GraficaController::class, 'mostrarCobertura'])->name('grafica.cobertura');
+    // Route::get('/grafica/cobertura', [GraficaController::class, 'mostrarCobertura'])->name('grafica.cobertura');
 
 
-    // grafico de cobertura en proceso
+    // --------------------------------- Grafico cobertua prenatal------------------------
     Route::get('/grafica1', [CoberturaPrenatalController::class, 'verGrafica'])->name('grafica1');
     Route::get('/ingresar-mes/{anio}', [CoberturaPrenatalController::class, 'mostrarFormularioMes'])->name('ingresarMes');
     Route::post('/guardar-mes', [CoberturaPrenatalController::class, 'guardarMes'])->name('guardarMes');
     Route::get('/ingresar-anio', [CoberturaPrenatalController::class, 'mostrarFormularioAnio'])->name('ingresarAnio');
     Route::post('/guardar-anio', [CoberturaPrenatalController::class, 'guardarAnio'])->name('guardarAnio');
 
+    // --------------------------------Grafico pastel para ver el alcance -------------------------
+    Route::get('/grafica-pastel', [CoberturaPrenatalController::class, 'verGraficaPastel'])->name('graficaPastel');
 
 
 
@@ -186,7 +193,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/obtener-embarazos', [ConsultaPrenatal::class, 'obtenerEmbarazos'])->name('obtener.embarazos');
 
 
-   
+
 
 
 
@@ -199,8 +206,18 @@ Route::middleware(['auth'])->group(function () {
 
 
     //graficas del home por si las termino xd
-    Route::get('/grafica2', [GraficaController::class, 'mostrarGrafica2'])->name('grafica2');
-    Route::get('/grafica3', [GraficaController::class, 'mostrarGrafica3'])->name('grafica3');
+
+    // rutas de comadronas 
+    Route::get('/comadronas/ingresar-anio', [ComadronasController::class, 'mostrarFormularioAnio'])->name('comadronas.ingresarAnio');
+    Route::post('/comadronas/guardar-anio', [ComadronasController::class, 'guardarAnio'])->name('comadronas.guardarAnio');
+    Route::get('/comadronas/ingresar-mes/{anio}', [ComadronasController::class, 'mostrarFormularioMes'])->name('comadronas.ingresarMes');
+    Route::post('/comadronas/guardar-mes', [ComadronasController::class, 'guardarMes'])->name('comadronas.guardarMes');
+    Route::get('/comadronas/grafica', [ComadronasController::class, 'mostrarGrafica3'])->name('comadronas.grafica');
+
+    //Route::post('/partos/guardar', [ComadronasController::class, 'guardarPartos'])->name('partos.guardar');
+
+    //Route::get('/grafica2', [GraficaController::class, 'mostrarGrafica2'])->name('grafica2');
+    // Route::get('/grafica3', [GraficaController::class, 'mostrarGrafica3'])->name('grafica3');
     Route::get('/grafica4', [GraficaController::class, 'mostrarGrafica4'])->name('grafica4');
 });
 
@@ -216,3 +233,10 @@ Route::get('/reporte/obstetrico/{pacienteCui}/{embarazoId}', [ReporteController:
 Route::get('/reporte/prenatal/{pacienteCui}/{embarazoId}', [ReporteController::class, 'reportePrenatal'])->name('reporte.prenatal');
 Route::get('/reporte/seguimiento/{pacienteCui}/{embarazoId}', [ReporteController::class, 'reporteSeguimiento'])->name('reporte.seguimiento');
 Route::get('/reporte/examen/{pacienteCui}/{embarazoId}', [ReporteController::class, 'reporteExamen'])->name('reporte.examen');
+
+// graficos de cobertura acumulada por medicos 
+Route::get('/medicos/ingresar-anio', [MedicosController::class, 'mostrarFormularioAnio'])->name('medicos.ingresarAnio');
+Route::post('/medicos/guardar-anio', [MedicosController::class, 'guardarAnio'])->name('medicos.guardarAnio');
+Route::get('/medicos/ingresar-mes/{anio}', [MedicosController::class, 'mostrarFormularioMes'])->name('medicos.ingresarMes');
+Route::post('/medicos/guardar-mes', [MedicosController::class, 'guardarMes'])->name('medicos.guardarMes');
+Route::get('/medicos/grafica', [MedicosController::class, 'mostrarGrafica'])->name('medicos.grafica');

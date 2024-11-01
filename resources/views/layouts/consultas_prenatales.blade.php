@@ -18,7 +18,7 @@
             </ul>
         </div>
     @endif
-      <!-- Barra de progreso -->
+   
       @if(isset($currentStep) && isset($totalSteps))
       @php
           $progress = ($currentStep / $totalSteps) * 100;
@@ -51,11 +51,11 @@
     </div>
 </form>
 
-<!-- Formulario para guardar la consulta -->
+
 <form action="{{ route('consulta.guardar') }}" method="POST">
     @csrf
 
-    <!-- Mostrar los embarazos si ya se seleccionó un paciente -->
+  
     <input type="hidden" name="paciente_cui" value="{{ request('paciente_cui') }}">
     
     @if(!empty($embarazos))

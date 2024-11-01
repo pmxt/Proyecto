@@ -22,7 +22,7 @@
         <div class="text-center mt-4 name">
             Restablecer Contraseña
         </div>
-        <!-- Mostrar errores de validación -->
+       
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
@@ -32,14 +32,14 @@
                 </ul>
             </div>
         @endif
-        <!-- Mensaje de éxito al enviar el correo de restablecimiento -->
+     
         @if (session('status'))
             <div class="alert alert-success text-center mt-3">
                 {{ session('status') }}
             </div>
         @endif
 
-        <!-- Formulario de Restablecimiento de Contraseña -->
+       
         <form action="{{ route('password.update') }}" method="POST">
             @csrf
             <input type="hidden" name="token" value="{{ $token }}">

@@ -16,7 +16,7 @@
         <div class="wrapper">
 
             <div class="logo">
-                <img src="{{ asset('imagenes/302464652_537376068387806_7427466127821357187_n.png') }}" alt="">
+                <img src="{{ asset('imagenes/MPS.jpg') }}" alt="">
             </div>
             <div class="text-center mt-4 name">
                 Ingreso de usuario
@@ -54,8 +54,7 @@
                 <button class="btn mt-3">Ingresar</button>
             </form>
             <div class="text-center fs-6">
-                <a href="{{ route('password.request') }}">Olvidaste tu contraseña?</a> o <a
-                    href="{{ route('register') }}">Crear cuenta</a>
+                <a href="{{ route('password.request') }}">Olvidaste tu contraseña?</a>
             </div>
         </div>
         </form>

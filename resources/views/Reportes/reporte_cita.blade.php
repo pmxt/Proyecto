@@ -83,7 +83,6 @@
     <div class="container">
         <div class="header">
             <img src="imagenes/MPS.jpg" alt="logo1" class="logo logo-left">
-            <img src="imagenes/muni.png" alt="logo2" class="logo logo-right">
             <div class="title-section">
                 <h1 class="section-title">DIRECCIÓN DE ÁREA DE SALUD DE TOTONICAPÁN</h1>
                 <h2 class="section-title">UNIDAD DE SALUD PRENATAL</h2>

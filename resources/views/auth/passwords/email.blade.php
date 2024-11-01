@@ -59,7 +59,7 @@
 
         <!-- Enlaces para volver al inicio de sesión o crear una cuenta -->
         <div class="text-center fs-6 mt-3">
-            <a href="{{ route('login') }}">Volver a Iniciar Sesión</a> o <a href="{{ route('register') }}">Crear cuenta</a>
+            <a href="{{ route('login') }}">Volver a Iniciar Sesión</a>
         </div>
     </div>
 

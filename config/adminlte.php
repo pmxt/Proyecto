@@ -351,13 +351,6 @@ return [
             'label_color' => 'success',
         ],
         [
-            'text' => 'Signos y sintomas de peligro',
-            'url' => '/embarazo/peligro',
-            'icon' => 'far fa-fw fa-file',
-            'label' => 4,
-            'label_color' => 'success',
-        ],
-        [
             'text' => 'Suplementos',
             'url' => '/medicamentos',
             'icon' => 'far fa-fw fa-file',
@@ -375,13 +368,8 @@ return [
             'url' => '/Usuarios', // Genera la URL usando el id del usuario autenticado
             'icon' => 'fas fa-fw fa-lock',
 
-        ],
-        [
-            'text' => 'crear una cuenta ',
-            'url' => 'admin/register',
-            'icon' => 'fas fa-fw fa-lock',
         ]
-
+        
         /*  [
             'text' => 'multilevel',
             'icon' => 'fas fa-fw fa-share',
